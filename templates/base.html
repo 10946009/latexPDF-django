@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" {% if request.user.page_light %}class="dark-mode-bg"{% endif %}>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    {% block title %}{% endblock %}
+  </title>
+  {% block content %}{% endblock %}
+
+</head>
+
+<body id="rainyMain" style="position: relative;" class="{% if request.user.page_light %}dark-mode{% endif %}">
+  {% block toolbar %}
+    hello,base
+  {% endblock %}
+  <main>
+  {% block body %}
+  {% endblock body %}
+    <!-- <div class="rellax rellax1" data-rellax-speed="5" style="left: -15px;bottom: 8%;">
+        <i class="fa-solid fa-circle circle1" style="font-size: 36px;color: #E3BCB5;"></i>
+    </div>
+    <div class="rellax rellax2" data-rellax-speed="6" style="left: calc(100vw / 4);bottom: 5%;">
+        <i class="fa-solid fa-circle circle2" style="font-size: 60px;color: #EBC1A8;"></i>
+    </div>
+    <div class="rellax rellax3" data-rellax-speed="1" style="right: calc(100vw / 4);bottom: 0.5%;">
+        <i class="fa-solid fa-circle circle3" style="font-size: 60px;color: #E7ADAC;"></i>
+    </div>
+    <div class="rellax rellax4" data-rellax-speed="3" style="right: -10px;bottom: 1%;">
+        <i class="fa-solid fa-circle circle4" style="font-size: 120px;color: rgb(199, 171, 245);"></i>
+    </div>
+    <div class="rellax rellax5" data-rellax-speed="3" style="right: calc(100vw / 4);top: 20%;">
+        <i class="fa-solid fa-circle circle4" style="font-size: 120px;color: #F1E2DB;"></i>
+    </div>
+    <div class="rellax rellax6" data-rellax-speed="3" style="left: calc(100vw / 3);top: 50%;">
+        <i class="fa-solid fa-circle circle4" style="font-size: 120px;color: #CEAEB9"></i>
+    </div>
+
+    
+    <div class="rellax rellaxStar" data-rellax-speed="5" style="right: calc(100vw / 12);transform: rotate(45deg);display: none;">
+      <i class="fas fa-star" style="font-size: 60px;color: #fff;"></i>
+    </div>
+    <div class="rellax rellaxStar" data-rellax-speed="1" style="right: calc(100vw / 10);;display: none;">
+        <i class="far fa-star" style="font-size: 60px;color: #fff;"></i>
+    </div>
+    <div class="rellax rellaxStar" data-rellax-speed="7" style="left: calc(100vw / 10);bottom: calc(100vh / 4);transform: rotate(60deg);display: none;">
+        <i class="fas fa-star" style="font-size: 100px;color: #ffd6d69c;"></i>
+    </div> -->
+  </main>
+</body>
+<script src="../static/js/jquery-3.7.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
+{% block content_script %}{% endblock %}
