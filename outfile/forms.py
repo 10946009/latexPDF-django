@@ -12,6 +12,7 @@ class ProblemForm(ModelForm):
             'sample_input': '範例輸入',
             'sample_output': '範例輸出',
             'hint': '提示',
+            'timelimit': '時間限制',
         }
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -19,4 +20,5 @@ class ProblemForm(ModelForm):
             'sample_input': forms.Textarea(attrs={'class': 'form-control'}),
             'sample_output': forms.Textarea(attrs={'class': 'form-control'}),
             'hint': forms.Textarea(attrs={'class': 'form-control'}),
+            'timelimit': forms.NumberInput(attrs={'class': 'form-control'}),
         }
