@@ -5,11 +5,11 @@ from django.db import models
 class Problem(models.Model):
     # main_tex = models.ForeignKey('MainTex', on_delete=models.SET_DEFAULT)
     title = models.TextField(max_length=255, blank=True, null=False, default='')
+    timelimit = models.IntegerField(blank=False, null=False, default=1)
     statement = models.TextField(max_length=255, blank=True, null=False, default='')
     sample_input = models.TextField(max_length=255, blank=True, null=False, default='')
     sample_output = models.TextField(max_length=255, blank=True, null=False, default='')
     hint = models.TextField(max_length=255, blank=True, null=False, default='')
-    timelimit = models.IntegerField(blank=False, null=False, default=1)
     
     def __str__(self):
         return self.title
