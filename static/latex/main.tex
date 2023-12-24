@@ -1,0 +1,203 @@
+\documentclass[fleqn, 12pt, a4paper]{article}
+\usepackage{cmap}
+\pdfminorversion=6
+\usepackage{CJK}
+
+\usepackage{titling}
+\title{2022 ICPC Asia Taoyuan Regional}
+
+\usepackage[
+            %xetex,
+   pdfencoding=auto,
+   pdftitle={\thetitle},
+            pdfcreator={}]{hyperref}
+
+\usepackage[left=20mm, right=20mm, top=20mm, bottom=40mm]{geometry}
+\setlength{\headheight}{22mm}
+\setlength{\headsep}{2mm}
+\setlength{\parindent}{0mm}
+\usepackage[compact]{titlesec}
+\usepackage{setspace}
+% \setstretch{1.2}
+
+\usepackage{caption}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage[overlay, absolute]{textpos}
+
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\usepackage{xfp}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{trees}
+\usetikzlibrary{calc}
+\usepackage{amsmath}
+
+% \usepackage{fancyhdr}
+% \fancypagestyle{document}{
+%   \fancyhf{}
+%   \fancyhead[C]{\includegraphics[width=1\textwidth]{header.png} \\ 2022 ICPC Asia Taoyuan Site}  
+%   \fancyfoot[C]{\thepage}
+  %\vspace{28mm}
+% }
+% \pagestyle{document}
+
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily, breaklines=false, frame=single, showlines=true}
+
+\usepackage{enumitem}
+\usepackage{paracol}
+\usepackage{ifthen}
+\usepackage{changepage}
+\usepackage{parskip}
+
+\newcounter{pid}
+\newcounter{ncase}[pid]
+
+\newcommand{\ith}[1]{$#1^\text{th}$}
+\newcommand{\tightlist}{\setlength\itemsep{0mm}\setlength\parskip{0mm}}
+
+\newcommand{\testdata}[1]
+{
+ \stepcounter{ncase}
+ \IfFileExists{#1/dom/data/sample/\arabic{ncase}.in}
+    {
+%\ifthenelse{\equal{#1}{E}}{\ifthenelse{\equal{\arabic{ncase}}{3}}{\newpage}{}}{}
+%\ifthenelse{\equal{#1}{H}}{\newpage}{}
+%\ifthenelse{\equal{#1}{K}}{\newpage}{}
+%\ifthenelse{\equal{#1}{L}}{\newpage}{}
+
+    
+\def\COLS{2}
+\ifthenelse{\equal{#1}{E99}}{\def\COLS{1}}{}
+\ifthenelse{\equal{#1}{L50}}{\ifthenelse{\equal{\arabic{ncase}}{4}}{\newpage}{}}{}
+
+  \vspace{0mm}
+  \begin{paracol}{\COLS}
+    \lstset{
+      extendedchars=false,
+      commentstyle=\color{blue},
+      texcl,
+      escapeinside=``, % 當遇到 `` 時，裡面的文字保持原本 style 不受 listing 限制
+      }
+   \subsection*{Sample Input \arabic{ncase}} \vspace{1mm} \lstinputlisting{#1/dom/data/sample/\arabic{ncase}.in}
+
+%\ifthenelse{\equal{#1}{D}}{\ifthenelse{\equal{\arabic{ncase}}{2}}{\newpage}{}}{}
+%\ifthenelse{\equal{#1}{E}}{\ifthenelse{\equal{\arabic{ncase}}{3}}{\newpage}{}}{}
+
+   \switchcolumn
+   \subsection*{Sample Output \arabic{ncase}} \vspace{1mm} \lstinputlisting{#1/dom/data/sample/\arabic{ncase}.ans}
+  \end{paracol}
+  \testdata{#1}
+    }{}
+}
+
+\newcommand{\field}[4][1] % necessity, dir, field name, file name
+{
+ \ifthenelse{\equal{#1}{1}}
+ {
+  \subsection*{#3}\IfFileExists{#2/#4}{\input{#2/#4}}{}
+ }
+ {
+  \IfFileExists{#2/#4}{\subsection*{#3}\input{#2/#4}}{}
+ }
+}
+
+\newcommand{\problem}[4] % dir, title, time, memory
+{
+ % \checkoddpage
+ % \ifoddpage
+ %  % do nothing
+ % \else
+ %  \begin{center}\vspace*{\fill}
+ %   {\LARGE Almost blank page}
+ %  \vspace*{\fill}\end{center}
+ %  \newpage
+ % \fi
+
+ \stepcounter{pid}
+    \vspace*{0mm}
+    \begin{center}    
+  % {\Large Problem \Alph{pid}}\\[2mm]
+  {\Large Problem }\\[2mm]
+  {\LARGE #2}\\[2mm]
+  % \begin{tabular}{r@{}c@{ }l}
+  %  Time limit&:& #3   \ifthenelse{\equal{#3}{1}}{second}{seconds}\\
+  %  Memory limit&:& #4 \ifthenelse{\equal{#4}{1}}{megabyte}{megabytes}
+  % \end{tabular}
+ \end{center}
+
+ \field{#1}{Problem Description}{statement.tex}
+ \field{#1}{Input Format}{input.tex}
+ \field{#1}{Output Format}{output.tex}
+ % \field{#1}{Technical Specification}{spec.tex}
+ \vspace{3mm}
+% \ifthenelse{\equal{#1}{E}}{\newpage}{}
+% \ifthenelse{\equal{#1}{F}}{\newpage}{}
+ \ifthenelse{\equal{#1}{J38}}{\newpage}{}
+
+% \ifthenelse{\equal{#1}{K}}{\newpage}{}
+% \ifthenelse{\equal{#1}{M}}{\newpage}{}
+% \ifthenelse{\equal{#1}{G}}{\newpage}{}
+ \testdata{#1}
+ \ifthenelse{\equal{#1}{L}}{\newpage}{}
+ % \field[0]{#1}{Hint}{hint.tex}
+ %\field[0]{#1}{Note}{note.tex}
+ \newpage
+}
+
+\usepackage{layout}
+\begin{document}
+\begin{CJK*}{UTF8}{bkai}
+
+  \abovedisplayshortskip=0pt
+  \belowdisplayshortskip=0pt
+  \abovedisplayskip=2pt
+  \belowdisplayskip=2pt
+
+  %\tableofcontents
+  %\vspace*{0mm}
+  %\problem{A00}{Ice Cream}{1}{1024}
+
+  % 商業類科出題用
+  % \begin{figure}[htbp]
+  %     % \centerline{\includegraphics{fig1.png}}
+  %     %\includegraphics[height=1.7in,width=5.2in]{fig3.pdf}
+  %     \includegraphics[width=6.2in]{fig3.pdf}
+  %     %\caption{圖範例}
+  %     %\label{fig}
+  % \end{figure}
+
+  %\newpage
+
+  % 商業類科出題用
+  % \begin{center}
+  %  \noindent {\bf 題目} 
+  % \end{center}
+  %  題目內容
+  % \begin{itemize}
+  % \item Page 1. 
+  % \item Page 2. 
+  % \item Page 3. 
+  % \item P
+  % \end{itemize}
+
+  %  (程式執行限制時間: 1 秒，為原則。) 
+
+
+  \newpage
+  %   \fancyhead[C]{\includegraphics[width=1\textwidth]{header.png} \\ 2022 ICPC Asia Taoyuan Site}  
+
+
+  \newcommand{\includes}[1]{\IfFileExists{#1}{\input{#1}}{}}
+
+  \includes{problem.tex}
+
+\end{CJK*}
+
+\end{document}
