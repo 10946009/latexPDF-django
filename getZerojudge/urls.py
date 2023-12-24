@@ -20,4 +20,5 @@ from outfile.views  import create
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', create.create),
+    path('create/<int:cid>', create.create),
 ]
