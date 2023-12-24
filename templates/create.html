@@ -1,8 +1,11 @@
 <!-- FILEPATH: /d:/主任的domjudge/Django_getZerojudge/getZerojudge/templates/create.html -->
 {% extends "base.html" %}
+{% load static %}
 {% block body %}
 
 <div style="display: flex;">
+    <math>&int;_a_^b^{f(x)<over>1+x} dx</math>
+    
     <div style="flex: 1;">
         <form method="post">
             {% csrf_token %}
@@ -10,10 +13,10 @@
             {{ form.as_p }}
             
             <button type="submit">Submit</button>
-          </form>
+        </form>
     </div>
     <div style="flex: 1;">
-        <embed src="path_to_pdf_file.pdf" width="100%" height="600px" type="application/pdf">
+        <embed src="{% static "latex/" %}/{{cid}}/main.pdf" width="100%" height="100%" type="application/pdf">
     </div>
 </div>
 {% endblock body %}
