@@ -4,19 +4,12 @@
 {% block body %}
 
 <div style="display: flex;">
-    <math>&int;_a_^b^{f(x)<over>1+x} dx</math>
-    
-    <div style="flex: 1;">
-        <form method="post">
-            {% csrf_token %}
-            
-            {{ form.as_p }}
-            
-            <button type="submit">Submit</button>
-        </form>
+    <div style="flex: 1;" id="CreateForm">
+        {% include "create_form.html" %}
     </div>
     <div style="flex: 1;">
-        <embed src="{% static "latex/" %}/{{cid}}/main.pdf" width="100%" height="100%" type="application/pdf">
+        <embed src="{% static "latex/" %}{{cid}}/dom/problem.pdf" width="100%" height="100%" type="application/pdf">
     </div>
 </div>
 {% endblock body %}
+

@@ -1,0 +1,32 @@
+<form method="post">
+    <div>Zerojudge抓取:<input id="ZeroJudgeNumber"></input></div> <button onclick="GetZeroJudge({{cid}})">GET</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% comment %} {{ input_output_form.management_form }}
+    {{ input_output_form.as_table }} {% endcomment %}
+    <button >Submit</button>
+</form>
+
+<script>
+    function GetZeroJudge(cid) {
+        const number = document.getElementById("ZeroJudgeNumber").value;
+        event.preventDefault();
+        $.ajax({
+            url: "/getZerojudge/" + cid ,
+            type: "POST",
+            data: {
+                "ZeroJudgeNumber":number,
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            },
+            success: function (data) {
+                const createDiv = $("#CreateForm")
+                createDiv.html(data)
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
+            }
+        });
+    }
+</script>

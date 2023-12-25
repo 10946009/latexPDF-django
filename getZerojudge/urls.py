@@ -16,9 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from outfile.views  import create
+from outfile.views  import create, get_zerojudge
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', create.create),
     path('create/<int:cid>', create.create),
+    path('getZerojudge/<int:cid>', get_zerojudge.get_zerojudge)
 ]
