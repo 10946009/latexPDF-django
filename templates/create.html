@@ -1,15 +1,10 @@
 <!-- FILEPATH: /d:/主任的domjudge/Django_getZerojudge/getZerojudge/templates/create.html -->
 {% extends "base.html" %}
-{% load static %}
+
 {% block body %}
 
-<div style="display: flex;">
-    <div style="flex: 1;" id="CreateForm">
-        {% include "create_form.html" %}
-    </div>
-    <div style="flex: 1;">
-        <embed src="{% static "latex/" %}{{cid}}/dom/problem.pdf" width="100%" height="100%" type="application/pdf">
-    </div>
+<div style="display: flex;" id="CreateForm">
+    {% include "create_form.html" %}
 </div>
 {% endblock body %}
 

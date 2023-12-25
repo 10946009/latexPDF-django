@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm ,inlineformset_factory
 from outfile.models import Problem, InputOutput
-
+from django.forms import modelformset_factory
 class ProblemForm(ModelForm):
     class Meta:
         model = Problem
@@ -10,8 +10,8 @@ class ProblemForm(ModelForm):
             'title': '題目名稱',
             'timelimit': '時間限制',
             'statement': '題目敘述',
-            'hint': '提示',
-            'spec': '題目說明',
+            'hint': 'hint',
+            'spec': 'spec',
         }
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),

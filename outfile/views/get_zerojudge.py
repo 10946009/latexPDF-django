@@ -106,7 +106,14 @@ def get_zerojudge(request,cid):
         output_file(path_dom,'problem.yaml',f'name: {title}')
         output_file(path_dom,'domjudge-problem.ini',f"timelimit='{timelimit}'")
         initial_data = {"statement":lst[0],"input":lst[1],"output":lst[2],"title":title,"timelimit":timelimit}
+
         form = ProblemForm(initial=initial_data)
+        form.title = title
+        form.timelimit = timelimit
+        form.statement = lst[0]
+        form.input = lst[1]
+        form.output = lst[2]
+        
         #複製generator.py到資料夾
         # f1 = f'{os.getcwd()}/generator.py'
         # f2 = f'{path}/dom/generator.py'
