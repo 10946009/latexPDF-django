@@ -12,7 +12,7 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
 }
 
-FILE_NAME = ['title','statement','sample_input','sample_output','hint']
+FILE_NAME = ['title','statement','input_format','output_format','hint']
 
 def output_file(path,name,string):
     os.makedirs(path, exist_ok=True)
@@ -98,22 +98,19 @@ def get_zerojudge(request,cid):
 
         #建立檔案&傳放入的文字
         output_file(all_file_path,'statement.tex',problem_from+lst[0])
-        output_file(all_file_path,'sample_input.tex',lst[1])
-        output_file(all_file_path,'sample_output.tex',lst[2])
+        output_file(all_file_path,'input_format.tex',lst[1])
+        output_file(all_file_path,'output_format.tex',lst[2])
         output_file(all_file_path,'problem.tex','\problem{./}{'+title+'}{1}{100}')
         output_file(all_file_path,'spec.tex','')
         output_file(all_file_path,'hint.tex','')
         output_file(path_dom,'problem.yaml',f'name: {title}')
         output_file(path_dom,'domjudge-problem.ini',f"timelimit='{timelimit}'")
-        initial_data = {"statement":lst[0],"input":lst[1],"output":lst[2],"title":title,"timelimit":timelimit}
+
+        # 放入資料
+        initial_data = {"statement":lst[0],"input_format":lst[1],"output_format":lst[2],"title":title,"timelimit":timelimit}
 
         form = ProblemForm(initial=initial_data)
-        form.title = title
-        form.timelimit = timelimit
-        form.statement = lst[0]
-        form.input = lst[1]
-        form.output = lst[2]
-        
+
         #複製generator.py到資料夾
         # f1 = f'{os.getcwd()}/generator.py'
         # f2 = f'{path}/dom/generator.py'
