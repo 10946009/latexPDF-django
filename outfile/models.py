@@ -21,6 +21,8 @@ class InputOutput(models.Model):
     input = models.TextField(blank=True, null=False, default='')
     output = models.TextField(blank=True, null=False, default='')
 
+    def __str__(self):
+        return self.problem
 # class MainTex(models.Model):
 #     name = models.TextField(blank=True, null=False, default='')
 #     content = models.TextField(blank=True, null=False, default='')

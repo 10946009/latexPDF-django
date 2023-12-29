@@ -7,6 +7,7 @@ import subprocess
 import os
 from django.shortcuts import get_object_or_404
 from outfile.models import Problem,InputOutput
+from .get_zerojudge import sample_file
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
@@ -30,9 +31,10 @@ def create(request,cid):
     if request.method == 'POST':
         # 如果是 POST 請求，處理表單提交
         print(request.POST)
+        print(request.FILES)
         problem_form = ProblemForm(request.POST, instance=problem_data)
         io_form = InputOutputFormSet(request.POST, instance=problem_data)
-
+        print(problem_form.is_valid(),io_form.is_valid())
         if problem_form.is_valid() and io_form.is_valid():
             problem_form.save()
             io_form.save()
@@ -52,22 +54,32 @@ def create(request,cid):
             output_file(path_dom,'problem.yaml',f'name: {problem_data.title}')
             output_file(path_dom,'domjudge-problem.ini',f"timelimit='{problem_data.timelimit}'")
             
+            #寫入input,output
+            path_dom_sample = os.path.join(path_dom,"data","sample")
+            input_output_data = InputOutput.objects.filter(problem=problem_data)
+            # clear old sample
+            if os.path.exists(path_dom_sample):
+                shutil.rmtree(path_dom_sample)
+            for i in range(len(input_output_data)):
+                sample_file(path_dom_sample,f'{i+1}.in',input_output_data[i].input)
+                sample_file(path_dom_sample,f'{i+1}.ans',input_output_data[i].output)
             
             # copy main.tex to path
             new_main_path = os.path.join(all_file_path, "main.tex")
             shutil.copyfile(main_path,new_main_path)
-
             subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=all_file_path)
 
             # if pdf產生ok
             main_pdf_path = os.path.join(all_file_path, "main.pdf")
             if os.path.isfile(main_pdf_path):
+                    dom_problem = os.path.join(path_dom,"problem.pdf")
+                    dom_main = os.path.join(path_dom,"main.pdf")
                     print('pdf產生ok')
                     # delete old pdf
                     if os.path.isfile(f'{path_dom}problem.pdf'):
-                        os.remove(f'{path_dom}problem.pdf')
+                        os.remove(dom_problem)
                     shutil.move(main_pdf_path,path_dom)
-                    os.rename(os.path.join(path_dom,"main.pdf"),os.path.join(path_dom,"main.pdf"))
+                    os.rename(dom_main,dom_problem)
     else:
         # 如果是 GET 請求，填充表單數據
         problem_form = ProblemForm(instance=problem)
