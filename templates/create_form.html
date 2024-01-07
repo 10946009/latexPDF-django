@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-6 dropdown" >
             <form method="post" class="card crate-form" style="margin:10px;padding:10px;">
-                <label>Zerojudge抓取：<input id="ZeroJudgeNumber"></input><button onclick="GetZeroJudge({{cid}})">GET</button></label> 
+                <label>Zerojudge抓取：<input id="ZeroJudgeNumber" value="{{number}}" placeholder="輸入ZeruJudge題號" ></input><button class="btn-dark btn" onclick="GetZeroJudge({{cid}})">GET</button></label> 
                 {% csrf_token %}
                 {{ problem_form.as_p }}
                 {{ formset.management_form }}

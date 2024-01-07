@@ -39,4 +39,4 @@ class InputOutputForm(ModelForm):
             'output': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
-InputOutputFormSet = inlineformset_factory(Problem, InputOutput, form=InputOutputForm, extra=1, can_delete=True)
+InputOutputFormSet = inlineformset_factory(Problem, InputOutput, form=InputOutputForm,extra=0, can_delete=True)

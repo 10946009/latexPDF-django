@@ -26,8 +26,6 @@ def create(request,cid):
     problem = Problem.objects.get(id=cid)
     # 取得現有的 Problem 對象
     problem_data = get_object_or_404(Problem, id=cid)
-    # input_output_data = get_object_or_404(InputOutput, problem=problem_data)
-    # input_output_form = get_object_or_404(InputOutputForm, problem=problem_data)
     if request.method == 'POST':
         # 如果是 POST 請求，處理表單提交
         print(request.POST)
