@@ -29,6 +29,7 @@ class InputOutputForm(ModelForm):
     class Meta:
         model = InputOutput
         fields ="input","output"
+        exclude = ['id']  # 排除掉 id 字段
         labels = {
             'input': '輸入',
             'output': '輸出',

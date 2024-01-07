@@ -23,23 +23,24 @@
                 <div id="formset-container">
                     {% for form in formset %}
                         <div class="formset-form">
-                            <hr>
                             <div class="row">
                                 <label id="input-output-number">#{{ forloop.counter }}</label>
                                 {% for field in form %}
-                                    
-                                        <div class="form-group col-md-6" style="{%  if field.label != "輸入" and field.label != "輸出" %}display:none;{% endif%}">
-                                            <label id="{{ field.id_for_label }}">{{ field.label }}</label>
-                                            {{ field }}
-                                        </div>
+                                <div class="form-group col-md-6" style="{%  if field.label != "輸入" and field.label != "輸出" %}display:none;{% endif%}">
+                                    <label id="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field }}
+                                </div>
                                 {% endfor %}
+                                <button type="button" class="btn btn-danger" onclick="this.parentNode.parentNode.remove(); InputOutputRemove();">X</button>
+                                <p></p>
+                                <hr>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
                             
-            <button onclick="addFormset()">Add Formset</button> <!-- Add this line -->
-                <button type="submit">Submit</button>
+                <button class="btn btn-primary"onclick="addFormset()">+</button> <!-- Add this line -->
+                <button class="btn btn-success" type="submit">Submit</button>
                 
             </form>
         </div>
@@ -70,33 +71,77 @@
             }
         });
     }
-
+    
+    let totalForms = document.getElementById('id_inputoutput_set-TOTAL_FORMS');
+    console.log(totalForms);
     function addFormset() {
         console.log("addFormset");
         event.preventDefault();
         // 找到表單集的總表單數量
-        const totalForms = parseInt($('#id_inputoutput_set-TOTAL_FORMS').val());
         console.log(totalForms);
         // 複製第一個空白表單
         const newForm = $('#formset-container .formset-form:first').clone();
-
+        
+        // 修改input-output-number
+        newForm.find('#input-output-number').html('#' + (parseInt(totalForms.value) + 1));
         // 替換克隆表單中的名稱，使其成為新的表單
         newForm.find(':input').each(function () {
-            const name = $(this).attr('name').replace('-0-', '-' + totalForms + '-');
-            $(this).attr('name', name).attr('id', name);
-            $(this).val('');  // 清空表單的值，可根據需要調整
+            console.log($(this).attr('name'));
+            if ($(this).attr('name')) {
+                const name = $(this).attr('name').replace('-0-', '-' + totalForms.value + '-');
+                $(this).attr('name', name).attr('id', name);
+                $(this).val('');  // 清空表單的值
+            }
         });
         newForm.find('label').each(function () {
-            const newFor = $(this).attr('id').replace('-0-', '-' + totalForms + '-');
-            $(this).attr('for', newFor);
-
+            if($(this).attr('id')){
+                const newFor = $(this).attr('id').replace('-0-', '-' + totalForms.value + '-');
+                $(this).attr('for', newFor);
+            }
         });
-
 
         // 將新表單添加到容器中
         $('#formset-container').append(newForm);
 
         // 更新表單集的總表單數量
-        $('#id_inputoutput_set-TOTAL_FORMS').val(totalForms + 1);
+        totalForms.value = parseInt(totalForms.value) + 1;
+    }
+
+    function InputOutputRemove() {
+        event.preventDefault();
+        // 表單集的總表單數量
+        totalForms.value = parseInt(totalForms.value) - 1;
+        console.log(totalForms);
+
+        // 重新編號
+        const formset = document.getElementById("formset-container");
+        const formset_form = formset.getElementsByClassName("formset-form");
+        for (let i = 0; i < formset_form.length; i++) {
+            const label = formset_form[i].getElementsByTagName("label");
+            const input = formset_form[i].getElementsByTagName("input");
+            const textarea = formset_form[i].getElementsByTagName("textarea");
+            const select = formset_form[i].getElementsByTagName("select");
+            const number = formset_form[i].getElementsByTagName("label")[0];
+            number.innerHTML = "#" + (i + 1);
+            for (let j = 0; j < label.length; j++) {
+                const newFor = label[j].getAttribute("id").replace("-" + (i + 1) + "-", "-" + i + "-");
+                label[j].setAttribute("for", newFor);
+            }
+            for (let j = 0; j < input.length; j++) {
+                const newName = input[j].getAttribute("name").replace("-" + (i + 1) + "-", "-" + i + "-");
+                input[j].setAttribute("name", newName);
+                input[j].setAttribute("id", newName);
+            }
+            for (let j = 0; j < textarea.length; j++) {
+                const newName = textarea[j].getAttribute("name").replace("-" + (i + 1) + "-", "-" + i + "-");
+                textarea[j].setAttribute("name", newName);
+                textarea[j].setAttribute("id", newName);
+            }
+            for (let j = 0; j < select.length; j++) {
+                const newName = select[j].getAttribute("name").replace("-" + (i + 1) + "-", "-" + i + "-");
+                select[j].setAttribute("name", newName);
+                select[j].setAttribute("id", newName);
+            }
+        }        
     }
 </script>

@@ -36,6 +36,8 @@ def create(request,cid):
         io_form = InputOutputFormSet(request.POST, instance=problem_data)
         print(problem_form.is_valid(),io_form.is_valid())
         if problem_form.is_valid() and io_form.is_valid():
+            # 清除舊的 input_output
+            # InputOutput.objects.filter(problem=problem_data).delete()
             problem_form.save()
             io_form.save()
             # 產生 PDF
