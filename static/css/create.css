@@ -7,13 +7,15 @@
 
 }
 
-label {
+label ,.io-number{
     font-size: x-large;
     font-weight: bold;
     margin: 0 0 0 0;
     padding-top: 20px;
 
 }
+
+
 
 textarea {
     font-size: 1.2em !important;
@@ -33,6 +35,6 @@ textarea {
 
 
 .btn{
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
 }

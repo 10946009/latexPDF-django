@@ -17,28 +17,22 @@ FILE_NAME = ['title','statement','input_format','output_format','spec','hint']
 
 def output_file(path,name,string):
     os.makedirs(path, exist_ok=True)
-    print([string])
     with open(f'{path}/{name}','w',encoding='UTF-8') as f:
-        string = string.replace('\r\n', '\\\\')
+        string = string.replace('\r\n', '\\\\\n')
         f.write(string)
 
 def create(request,cid):
     problem = Problem.objects.get(id=cid)
     # 取得現有的 Problem 對象
     problem_data = get_object_or_404(Problem, id=cid)
-    old_data = InputOutput.objects.filter(problem=problem_data)
     if request.method == 'POST':
         # 如果是 POST 請求，處理表單提交
         print(request.POST)
-        print(request.FILES)
         problem_form = ProblemForm(request.POST, instance=problem_data)
         io_form = InputOutputFormSet(request.POST, instance=problem_data)
+
         print(problem_form.is_valid(),io_form.is_valid())
         if problem_form.is_valid() and io_form.is_valid():
-            # 清除舊的 input_output
-            for data in old_data:
-                print(data.id,data.input,data.output)
-                data.delete()
             problem_form.save()
             io_form.save()
             # 產生 PDF
@@ -70,7 +64,7 @@ def create(request,cid):
             # copy main.tex to path
             new_main_path = os.path.join(all_file_path, "main.tex")
             shutil.copyfile(main_path,new_main_path)
-            # subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=all_file_path)
+            subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=all_file_path)
 
             # if pdf產生ok
             main_pdf_path = os.path.join(all_file_path, "main.pdf")
@@ -86,12 +80,12 @@ def create(request,cid):
         
         else:
             print("ERROR!",problem_form.errors,io_form.errors)
-    else:
-        # 如果是 GET 請求，填充表單數據
-        problem_form = ProblemForm(instance=problem)
-        io_form = InputOutputFormSet(instance=problem)
-        if io_form.initial_form_count() == 0:
-            io_form.extra = 1
+
+    # 如果是 GET 請求，填充表單數據
+    problem_form = ProblemForm(instance=problem)
+    io_form = InputOutputFormSet(instance=problem)
+    if io_form.initial_form_count() == 0:
+        io_form.extra = 1
 
     # if input_output_form.is_valid():
     #     input_output_form.save()
