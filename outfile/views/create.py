@@ -21,6 +21,26 @@ def output_file(path,name,string):
         string = string.replace('\r\n', '\\\\\n')
         f.write(string)
 
+def process_formset_data(request_data,problem_data):
+    # 将 QueryDict 转换为字典
+    form_data = dict(request_data)
+    delete_flags = list()
+    id_flags = list()
+    # 获取表单集中的 DELETE 字段
+    # delete old data
+    
+
+    for i in range(int(form_data['inputoutput_set-INITIAL_FORMS'][0])):
+        delete_data = form_data.get(f'inputoutput_set-{i}-DELETE', None)
+        if delete_data != ['on']:
+            #create new data
+            input_data = form_data.get(f'inputoutput_set-{i}-input', None)
+            output_data = form_data.get(f'inputoutput_set-{i}-output', None)
+            InputOutput.objects.create(problem=problem_data,input=input_data[0],output=output_data[0])
+            print("add",i,input_data,output_data)
+            
+
+
 def create(request,cid):
     problem = Problem.objects.get(id=cid)
     # 取得現有的 Problem 對象
@@ -30,9 +50,12 @@ def create(request,cid):
         print(request.POST)
         problem_form = ProblemForm(request.POST, instance=problem_data)
         io_form = InputOutputFormSet(request.POST, instance=problem_data)
-
         print(problem_form.is_valid(),io_form.is_valid())
         if problem_form.is_valid() and io_form.is_valid():
+            #delete old data
+            InputOutput.objects.filter(problem=problem_data).delete()
+
+            process_formset_data(request.POST,problem_data)
             problem_form.save()
             io_form.save()
             # 產生 PDF
@@ -64,7 +87,7 @@ def create(request,cid):
             # copy main.tex to path
             new_main_path = os.path.join(all_file_path, "main.tex")
             shutil.copyfile(main_path,new_main_path)
-            subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=all_file_path)
+            # subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=all_file_path)
 
             # if pdf產生ok
             main_pdf_path = os.path.join(all_file_path, "main.pdf")

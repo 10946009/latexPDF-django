@@ -77,13 +77,14 @@
     }
     
     let totalForms = document.getElementById('id_inputoutput_set-TOTAL_FORMS');
+    console.log(totalForms.value);
     function addFormset() {
         event.preventDefault();
         // 找到表單集的總表單數量
         // 複製第一個空白表單
         const newForm = $('#formset-container .formset-form:first').clone();
         // 修改input-output-number
-        newForm.find('#input-output-number').html('#' + (parseInt(totalForms.value) + 1));
+        newForm.find('.io-number').html('#' + (parseInt(totalForms.value) + 1));
         // 替換克隆表單中的名稱，使其成為新的表單
         
         newForm.data('set', parseInt(totalForms.value));
@@ -119,8 +120,8 @@
             formsetForm.hide();
         } else {
             formsetForm.remove();
-            totalForms.value = parseInt(totalForms.value) -1;
         }
+        totalForms.value = parseInt(totalForms.value) -1;
         ResetOrder();
     }
     function ResetOrder(){
