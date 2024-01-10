@@ -65,7 +65,7 @@
 \newcommand{\testdata}[1]
 {
  \stepcounter{ncase}
- \IfFileExists{#1/dom/data/sample/\arabic{ncase}.in}
+ \IfFileExists{#1/data/sample/\arabic{ncase}.in}
     {
 %\ifthenelse{\equal{#1}{E}}{\ifthenelse{\equal{\arabic{ncase}}{3}}{\newpage}{}}{}
 %\ifthenelse{\equal{#1}{H}}{\newpage}{}
@@ -85,13 +85,13 @@
       texcl,
       escapeinside=``, % 當遇到 `` 時，裡面的文字保持原本 style 不受 listing 限制
       }
-   \subsection*{Sample Input \arabic{ncase}} \vspace{1mm} \lstinputlisting{#1/dom/data/sample/\arabic{ncase}.in}
+   \subsection*{Sample Input \arabic{ncase}} \vspace{1mm} \lstinputlisting{#1/data/sample/\arabic{ncase}.in}
 
 %\ifthenelse{\equal{#1}{D}}{\ifthenelse{\equal{\arabic{ncase}}{2}}{\newpage}{}}{}
 %\ifthenelse{\equal{#1}{E}}{\ifthenelse{\equal{\arabic{ncase}}{3}}{\newpage}{}}{}
 
    \switchcolumn
-   \subsection*{Sample Output \arabic{ncase}} \vspace{1mm} \lstinputlisting{#1/dom/data/sample/\arabic{ncase}.ans}
+   \subsection*{Sample Output \arabic{ncase}} \vspace{1mm} \lstinputlisting{#1/data/sample/\arabic{ncase}.ans}
   \end{paracol}
   \testdata{#1}
     }{}
@@ -133,8 +133,8 @@
  \end{center}
 
  \field{#1}{Problem Description}{statement.tex}
- \field{#1}{Input Format}{input.tex}
- \field{#1}{Output Format}{output.tex}
+ \field{#1}{Input Format}{input_format.tex}
+ \field{#1}{Output Format}{output_format.tex}
  % \field{#1}{Technical Specification}{spec.tex}
  \vspace{3mm}
 % \ifthenelse{\equal{#1}{E}}{\newpage}{}
