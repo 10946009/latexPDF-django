@@ -24,12 +24,8 @@ def output_file(path,name,string):
 def process_formset_data(request_data,problem_data):
     # 将 QueryDict 转换为字典
     form_data = dict(request_data)
-    delete_flags = list()
-    id_flags = list()
     # 获取表单集中的 DELETE 字段
     # delete old data
-    
-
     for i in range(int(form_data['inputoutput_set-INITIAL_FORMS'][0])):
         delete_data = form_data.get(f'inputoutput_set-{i}-DELETE', None)
         if delete_data != ['on']:
@@ -46,20 +42,18 @@ def create(request,cid):
     # 取得現有的 Problem 對象
     problem_data = get_object_or_404(Problem, id=cid)
     if request.method == 'POST':
-        # 如果是 POST 請求，處理表單提交
-        print(request.POST)
-        problem_form = ProblemForm(request.POST, instance=problem_data)
-        io_form = InputOutputFormSet(request.POST, instance=problem_data)
+        form_data = dict(request.POST)
+        #定義資料驗證
+        problem_form = ProblemForm(form_data, instance=problem_data)
+        io_form = InputOutputFormSet(form_data, instance=problem_data)
         print(problem_form.is_valid(),io_form.is_valid())
+
         if problem_form.is_valid() and io_form.is_valid():
             #delete old data
             InputOutput.objects.filter(problem=problem_data).delete()
 
-            process_formset_data(request.POST,problem_data)
-            problem_form.save()
-            io_form.save()
             # 產生 PDF
-            
+            # 定義路徑和產生資料夾
             all_file_path = os.path.join("static", "latex", f'{problem_data.id}')
             path_dom = os.path.join(all_file_path, "dom")
             main_path = os.path.join("static","latex","main.tex")
@@ -67,39 +61,44 @@ def create(request,cid):
                 os.mkdir(os.path.join(all_file_path))
                 os.mkdir(os.path.join(all_file_path,"dom"))
 
-            #寫入檔案
+            #寫入檔案 stament,input_format,output_format,spec,hint
             for name in FILE_NAME:
-                output_file(all_file_path, f'{name}.tex', getattr(problem_data, name))
-            output_file(all_file_path,'problem.tex','\problem{./}{'+problem_data.title+'}{1}{100}')
+                output_file(path_dom, f'{name}.tex', getattr(problem_data, name))
+            output_file(path_dom,'problem.tex','\problem{./}{'+problem_data.title+'}{1}{100}')
             output_file(path_dom,'problem.yaml',f'name: {problem_data.title}')
             output_file(path_dom,'domjudge-problem.ini',f"timelimit='{problem_data.timelimit}'")
             
             #寫入input,output
             path_dom_sample = os.path.join(path_dom,"data","sample")
-            input_output_data = InputOutput.objects.filter(problem=problem_data)
-            # clear old sample
-            if os.path.exists(path_dom_sample):
-                shutil.rmtree(path_dom_sample)
-            for i in range(len(input_output_data)):
-                sample_file(path_dom_sample,f'{i+1}.in',input_output_data[i].input)
-                sample_file(path_dom_sample,f'{i+1}.ans',input_output_data[i].output)
+            for i in range(int(form_data['inputoutput_set-INITIAL_FORMS'][0])):
+                delete_data = form_data.get(f'inputoutput_set-{i}-DELETE', None)
+                if delete_data != ['on']:
+                    #create new data
+                    input_data = form_data.get(f'inputoutput_set-{i}-input', None)
+                    output_data = form_data.get(f'inputoutput_set-{i}-output', None)
+                    sample_file(path_dom_sample,f'{i+1}.in',input_data)
+                    sample_file(path_dom_sample,f'{i+1}.ans',output_data)
             
             # copy main.tex to path
-            new_main_path = os.path.join(all_file_path, "main.tex")
+            new_main_path = os.path.join(path_dom, "main.tex")
             shutil.copyfile(main_path,new_main_path)
-            # subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=all_file_path)
+            subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=path_dom)
 
             # if pdf產生ok
-            main_pdf_path = os.path.join(all_file_path, "main.pdf")
+            main_pdf_path = os.path.join(path_dom, "main.pdf")
             if os.path.isfile(main_pdf_path):
                     dom_problem = os.path.join(path_dom,"problem.pdf")
-                    dom_main = os.path.join(path_dom,"main.pdf")
+                    dom_main_pdf = os.path.join(path_dom,"main.pdf")
                     print('pdf產生ok')
                     # delete old pdf
                     if os.path.isfile(f'{path_dom}problem.pdf'):
                         os.remove(dom_problem)
-                    shutil.move(main_pdf_path,path_dom)
-                    os.rename(dom_main,dom_problem)
+                    os.rename(dom_main_pdf,dom_problem)
+
+            # # 如果要存檔，就執行 save() 方法
+            # process_formset_data(request.POST,problem_data) # 資料庫create new data
+            # problem_form.save()
+            # io_form.save()
         
         else:
             print("ERROR!",problem_form.errors,io_form.errors)
