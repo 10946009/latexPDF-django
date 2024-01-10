@@ -32,7 +32,7 @@
                                     {{ field }}
                                 </div>
                                 {% endfor %}
-                                <button type="button" class="btn btn-danger col-md-1" onclick="InputOutputRemove();" >X</button>
+                                <button type="button" class="btn btn-danger col-md-1" onclick="InputOutputRemove({{cid}});" >X</button>
 
                                 <hr>
                             </div>
@@ -41,14 +41,14 @@
                 </div>
                             
                 <button class="btn btn-primary"onclick="addFormset()">+</button> <!-- Add this line -->
-                <div class="row justify-content-between">
-                    <button class="btn btn-success col-md-5 mx-3" type="submit">Submit</button>
-                    <button class="btn btn-success col-md-5 mx-3" type="submit">Submit</button>
-                </div>
+                {% comment %} <div class="row justify-content-between"> {% endcomment %}
+                    <button class="btn btn-success" type="submit">儲存</button>
+                {% comment %} </div> {% endcomment %}
                 
             </form>
         </div>
         <div class="col-md-6 card fix-div-right" >
+            <button class="btn btn-success col-md-2 mx-3" onclick="PreviewPDF()">預覽</button>
                 <embed src="{% static "latex/" %}{{cid}}/dom/problem.pdf" width="100%" height="100%" type="application/pdf">
         </div>
     </div>
@@ -124,6 +124,7 @@
         totalForms.value = parseInt(totalForms.value) -1;
         ResetOrder();
     }
+    //重新排序數字編號
     function ResetOrder(){
         // input-output-number class=io-number
         const allNumber = $('.io-number');
@@ -137,7 +138,10 @@
             allNumber[i].innerHTML ='#'+ count;
             count++;
         }
+    }
 
+    function PreviewPDF(cid){
+        
     }
 </script>
 
