@@ -37,7 +37,9 @@
                                     {% endif %}
                                 </div>
                                 {% endfor %}
+                                {% if forloop.counter != 1 %}
                                 <button type="button" class="btn btn-danger col-md-1" onclick="this.parentNode.parentNode.remove();InputOutputRemove();" >X</button>
+                                {% endif %}
 
                                 <hr>
                             </div>
