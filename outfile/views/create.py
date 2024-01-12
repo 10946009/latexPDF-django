@@ -26,7 +26,7 @@ def process_formset_data(request_data,problem_data):
     form_data = dict(request_data)
     # 获取表单集中的 DELETE 字段
     # delete old data
-    for i in range(int(form_data['inputoutput_set-INITIAL_FORMS'][0])):
+    for i in range(int(form_data['inputoutput_set-TOTAL_FORMS'][0])):
         delete_data = form_data.get(f'inputoutput_set-{i}-DELETE', None)
         if delete_data != ['on']:
             #create new data
@@ -59,7 +59,6 @@ def create_tex(form_data,problem_data):
     if os.path.exists(path_manager.SAMPLE):
         shutil.rmtree(path_manager.SAMPLE)
         os.makedirs(path_manager.SAMPLE, exist_ok=True)
-        print(int(form_data['inputoutput_set-INITIAL_FORMS'][0]))
     for i in range(int(form_data['inputoutput_set-TOTAL_FORMS'][0])):
         delete_data = form_data.get(f'inputoutput_set-{i}-DELETE', None)
         print("delete",i,delete_data)
@@ -83,6 +82,7 @@ def create(request,cid):
     if request.method == 'POST':
         print(request.POST)
         form_data = request.POST
+        save_value = request.POST.get('saveValue', None)
         #定義資料驗證
         problem_form = ProblemForm(form_data, instance=problem_data)
         io_form = InputOutputFormSet(form_data, instance=problem_data)
@@ -91,7 +91,7 @@ def create(request,cid):
         if problem_form.is_valid() and io_form.is_valid():
             create_tex(form_data,problem_data)
 
-            # subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=path_manager.DOM)
+            subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=path_manager.DOM)
 
             # if pdf產生ok
             main_pdf_path = os.path.join(path_manager.DOM, "main.pdf")
@@ -103,13 +103,13 @@ def create(request,cid):
                     if os.path.isfile(f'{path_manager.DOM}problem.pdf'):
                         os.remove(dom_problem)
                     os.rename(dom_main_pdf,dom_problem)
-            if 1:
-                #回傳預覽結果
-                return render(request, 'create_form_PDF.html',{'cid':cid})
-            # 如果要存檔，就執行 save() 方法
-            process_formset_data(request.POST,problem_data) # 資料庫create new data
-            problem_form.save()
-            io_form.save()
+            if save_value:
+                # 如果要存檔，就執行 save() 方法
+                process_formset_data(request.POST,problem_data) # 資料庫create new data
+                problem_form.save()
+                io_form.save()
+                
+            return render(request, 'create_form_PDF.html',{'cid':cid})
         else:
             print("ERROR!",problem_form.errors,io_form.errors)
 

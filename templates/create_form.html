@@ -27,12 +27,17 @@
                                 <div class="io-number col-md-1"><label id="input-output-number">#{{ forloop.counter }}</label></div>
                                 {% for field in form %}
                                 <div class="form-group col-md-5" style="{%  if field.label != "輸入" and field.label != "輸出" %}display:none;{% endif%}">
-                                    {%  if field.label == "輸入" or field.label == "輸出" %}<label id="{{ field.id_for_label }}">{{ field.label }}</label>{% endif%}
-                                    
-                                    {{ field }}
+                                    {%  if field.label == "輸入" or field.label == "輸出" %}
+                                        <label id="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {% endif%}
+                                    {% if field.label == "Id" or field.label == "Problem" %}
+                                        <input type="text" class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="" readonly>
+                                    {% else %}
+                                        {{ field }}
+                                    {% endif %}
                                 </div>
                                 {% endfor %}
-                                <button type="button" class="btn btn-danger col-md-1" onclick="InputOutputRemove({{cid}});" >X</button>
+                                <button type="button" class="btn btn-danger col-md-1" onclick="this.parentNode.parentNode.remove();InputOutputRemove();" >X</button>
 
                                 <hr>
                             </div>
@@ -42,13 +47,14 @@
                             
                 <button class="btn btn-primary"onclick="addFormset()">+</button> <!-- Add this line -->
                 {% comment %} <div class="row justify-content-between"> {% endcomment %}
-                    <button class="btn btn-success" type="submit">儲存</button>
+                    <input id="saveValue" name="saveValue" value="0" hidden></input>
+                    <button class="btn btn-success" type="submit" onclick="PreviewPDF(1)">儲存</button>
                 {% comment %} </div> {% endcomment %}
                 
             </form>
         </div>
         <div class="col-md-6 card fix-div-right" >
-            <button class="btn btn-success col-md-2 mx-3" onclick="PreviewPDF()">預覽</button>
+            <button class="btn btn-success col-md-2 mx-3" onclick="PreviewPDF(0)">預覽</button>
                 <div id="PDFdiv" style="height:100%;">
                 {% include "create_form_PDF.html" %}
                 </div>
@@ -56,6 +62,7 @@
     </div>
 
 <script>
+    document.getElementById("id_inputoutput_set-INITIAL_FORMS").value = 0;
     function GetZeroJudge(cid) {
         const number = document.getElementById("ZeroJudgeNumber").value;
         event.preventDefault();
@@ -112,7 +119,7 @@
         totalForms.value = parseInt(totalForms.value) + 1;
     }
 
-    function InputOutputRemove() {
+    {% comment %} function InputOutputRemove() {
         event.preventDefault();
         // hidden formset-formset
         const formsetForm = $(event.currentTarget).parents('.formset-form');
@@ -140,11 +147,48 @@
             allNumber[i].innerHTML ='#'+ count;
             count++;
         }
-    }
+    } {% endcomment %}
+    function InputOutputRemove() {
+        event.preventDefault();
+        // 表單集的總表單數量
+        totalForms.value = parseInt(totalForms.value) - 1;
+        console.log(totalForms);
 
-    function PreviewPDF(cid){
+        // 重新編號
+        const formset = document.getElementById("formset-container");
+        const formset_form = formset.getElementsByClassName("formset-form");
+        for (let i = 0; i < formset_form.length; i++) {
+            const label = formset_form[i].getElementsByTagName("label");
+            const input = formset_form[i].getElementsByTagName("input");
+            const textarea = formset_form[i].getElementsByTagName("textarea");
+            const select = formset_form[i].getElementsByTagName("select");
+            const number = formset_form[i].getElementsByTagName("label")[0];
+            for (let j = 0; j < label.length; j++) {
+                const newFor = label[j].getAttribute("id").replace("-" + (i + 1) + "-", "-" + i + "-");
+                label[j].setAttribute("for", newFor);
+            }
+            for (let j = 0; j < input.length; j++) {
+                const newName = input[j].getAttribute("name").replace("-" + (i + 1) + "-", "-" + i + "-");
+                input[j].setAttribute("name", newName);
+                input[j].setAttribute("id", newName);
+            }
+            for (let j = 0; j < textarea.length; j++) {
+                const newName = textarea[j].getAttribute("name").replace("-" + (i + 1) + "-", "-" + i + "-");
+                textarea[j].setAttribute("name", newName);
+                textarea[j].setAttribute("id", newName);
+            }
+            for (let j = 0; j < select.length; j++) {
+                const newName = select[j].getAttribute("name").replace("-" + (i + 1) + "-", "-" + i + "-");
+                select[j].setAttribute("name", newName);
+                select[j].setAttribute("id", newName);
+            }
+        }   
+        }
+    function PreviewPDF(saveValue){
         event.preventDefault();
         const formData = new FormData(document.getElementById("PDF-Data"));
+        const saveValueInput = document.getElementById("saveValue");
+        saveValueInput.value = saveValue;
         $.ajax({
             type: "POST",
             data: formData,
@@ -154,6 +198,9 @@
             success: function (data) {
                 const PDFdiv = $("#PDFdiv");
                 PDFdiv.html(data);
+                if(saveValue == 1){
+                    alert("儲存成功");
+                }
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 alert(xhr.status);
