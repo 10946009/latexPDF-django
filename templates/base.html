@@ -11,6 +11,9 @@
   </title>
   {% block content %}{% endblock %}
   <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
 </head>
 
 <body>
@@ -22,7 +25,5 @@
   {% endblock body %}
   </main>
 </body>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/dixonandmoe/rellax@master/rellax.min.js"></script>
+
 {% block content_script %}{% endblock %}
