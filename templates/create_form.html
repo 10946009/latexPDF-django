@@ -65,6 +65,7 @@
 
 <script>
     document.getElementById("id_inputoutput_set-INITIAL_FORMS").value = 0;
+    var totalForms = document.getElementById("id_inputoutput_set-TOTAL_FORMS");
     function GetZeroJudge(cid) {
         const number = document.getElementById("ZeroJudgeNumber").value;
         event.preventDefault();
@@ -87,13 +88,13 @@
         });
     }
     
-    let totalForms = document.getElementById('id_inputoutput_set-TOTAL_FORMS');
+    
     console.log(totalForms.value);
     function addFormset() {
         event.preventDefault();
         // 找到表單集的總表單數量
         // 複製第一個空白表單
-        const newForm = $('#formset-container .formset-form:first').clone();
+        const newForm = $('#formset-container .formset-form:first').clone();    
         // 修改input-output-number
         newForm.find('.io-number').html('#' + (parseInt(totalForms.value) + 1));
         // 替換克隆表單中的名稱，使其成為新的表單
@@ -119,6 +120,8 @@
 
         // 更新表單集的總表單數量
         totalForms.value = parseInt(totalForms.value) + 1;
+        console.log(totalForms.value);
+        ResetOrder();
     }
 
     {% comment %} function InputOutputRemove() {
@@ -134,7 +137,8 @@
         }
         totalForms.value = parseInt(totalForms.value) -1;
         ResetOrder();
-    }
+    } {% endcomment %}
+
     //重新排序數字編號
     function ResetOrder(){
         // input-output-number class=io-number
@@ -149,7 +153,7 @@
             allNumber[i].innerHTML ='#'+ count;
             count++;
         }
-    } {% endcomment %}
+    }
     function InputOutputRemove() {
         event.preventDefault();
         // 表單集的總表單數量
@@ -185,6 +189,7 @@
                 select[j].setAttribute("id", newName);
             }
         }   
+        ResetOrder();
         }
     function PreviewPDF(saveValue){
         event.preventDefault();
