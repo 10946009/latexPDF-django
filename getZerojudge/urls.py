@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', create.create),
     path('create/<int:cid>', create.create),
+    path('create/<int:cid>/downloadZIP', create.download_zip),
     path('getZerojudge/<int:cid>', get_zerojudge.get_zerojudge)
 ]

@@ -1,3 +1,5 @@
+from django.http import HttpResponse
+from django.utils.timezone import now
 import shutil
 from bs4 import BeautifulSoup
 from django.shortcuts import render
@@ -126,17 +128,24 @@ def create(request,cid):
     return render(request, 'create.html', {'cid':cid,'problem_form': problem_form, 'formset': io_form })
 
 
-def your_view(request, problem_id):
-    problem = Problem.objects.get(id=problem_id)
+def download_zip(request, cid):
+    path_manager = PathManager(cid)
+    source_folder = path_manager.DOM
 
-    if request.method == 'POST':
-        problem_form = ProblemForm(request.POST, instance=problem)
-        formset = InputOutputFormSet(request.POST, instance=problem)
-        if problem_form.is_valid() and formset.is_valid():
-            problem_form.save()
-            formset.save()
-    else:
-        problem_form = ProblemForm(instance=problem)
-        formset = InputOutputFormSet(instance=problem)
+    
+    # 打包
+    shutil.make_archive(source_folder, 'zip', source_folder)
+    
+    archive_name = f'{source_folder}.zip'
+    
+    # 打开打包后的文件
+    with open(archive_name, 'rb') as f:
+        response = HttpResponse(f.read(), content_type='application/zip')
+        
+        # 设置头信息，防止缓存
+        response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response['Expires'] = now().strftime('%a, %d %b %Y %H:%M:%S GMT')
+    
+    # 不再手动删除原始的 .zip 文件，因为 make_archive 已经完成了这个操作
 
-    return render(request, 'your_template.html', {'problem_form': problem_form, 'formset': formset})
+    return response
