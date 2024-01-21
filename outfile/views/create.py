@@ -103,7 +103,8 @@ def create(request,cid):
                     if os.path.isfile(f'{path_manager.DOM}problem.pdf'):
                         os.remove(dom_problem)
                     os.rename(dom_main_pdf,dom_problem)
-            if save_value:
+            if save_value == "1":
+                print("save!")
                 # 如果要存檔，就執行 save() 方法
                 process_formset_data(request.POST,problem_data) # 資料庫create new data
                 problem_form.save()
