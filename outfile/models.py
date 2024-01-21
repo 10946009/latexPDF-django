@@ -12,6 +12,8 @@ class Problem(models.Model):
     hint = models.TextField(blank=True, null=False, default='')
     spec = models.TextField(blank=True, null=False, default='')
 
+    created_time = models.DateTimeField(auto_now_add=True ,blank=True, null=True)
+
     def __str__(self):
         return self.title
 
