@@ -1,7 +1,7 @@
 
  main {
-    margin: 10px;
-    
+    margin-top: 60px;
+    position: relative;
 }
 body {
     background-color: #efefef;
@@ -12,6 +12,7 @@ body {
     margin: 0px;
     padding: 0px;
     box-sizing: border-box;
+    
 }
 main a {
     color: #333;
@@ -20,5 +21,8 @@ main a {
 .navbar {
     padding: 10px;
     z-index: 1000;
-    position: relative;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    
 }
