@@ -6,6 +6,7 @@ class PathManager:
         self.PATH = os.path.join("static", "latex",str(dir_name))
         self.SAMPLE_TEX = os.path.join("static", "latex", "main.tex")
         self.DOM = os.path.join(self.PATH, "dom")
+        self.DOM_ZIP = os.path.join(self.PATH, "dom.zip")
         self.MAIN_TEX = os.path.join(self.DOM, "main.tex")
         self.MAIN_PDF = os.path.join(self.DOM, "main.pdf")
         self.DATA = os.path.join(self.DOM, "data")
