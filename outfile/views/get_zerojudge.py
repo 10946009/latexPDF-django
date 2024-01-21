@@ -53,6 +53,8 @@ def get_crowd(url):
 
 #針對sample的in,ans檔轉LF
 def sample_file(path,name,lststring):
+    print(lststring)
+    lststring = lststring.replace('\r\n', '\n')
     os.makedirs(path, exist_ok=True)
     with open(f'{path}/{name}','wb') as f:
         f.write((str(lststring)+'\n').encode())
@@ -185,8 +187,8 @@ def get_zerojudge(request,cid):
         all_io =list()
         io_dict = {"input":'',"output":''}
         for index,io in enumerate(input_output):
-            io = io.replace('\r', '\n')
-            io = io.replace('\\\\\n', '')
+            print("io",[io])
+            io = io.replace('\r\n', '\n')
             if index % 2 == 0:
                 io_dict['input'] = io
             else:
