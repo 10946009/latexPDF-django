@@ -1,0 +1,29 @@
+<!-- FILEPATH: /d:/主任的domjudge/Django_getZerojudge/getZerojudge/templates/create.html -->
+{% extends "base.html" %}
+{% load static %}
+{% block title %}題目列表{% endblock title %}
+{% block content %}
+{% comment %} <link rel="stylesheet" href="{% static "css/index.css" %}"> {% endcomment %}
+{% endblock content %}
+
+{% block body %}
+<div class="container card">
+    <table  class="table table-striped ">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Created_time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for problem in problem_list %}
+                <tr class="align-middle">
+                    <td><a href="{% url 'create' problem.id %}">{{ problem.title }}</a></td>
+                    <td>{{ problem.created_time }}</td>
+                    <td><button class="btn btn-danger">刪除</button></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock body %}

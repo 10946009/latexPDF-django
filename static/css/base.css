@@ -1,0 +1,24 @@
+
+ main {
+    margin: 10px;
+    
+}
+body {
+    background-color: #efefef;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 20px;
+    line-height: 1.42857143;
+    color: #333;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+main a {
+    color: #333;
+}
+
+.navbar {
+    padding: 10px;
+    z-index: 1000;
+    position: relative;
+}
