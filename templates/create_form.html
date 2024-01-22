@@ -49,7 +49,7 @@
                             
                 <button class="btn btn-primary"onclick="addFormset()">+</button> <!-- Add this line -->
                 {% comment %} <div class="row justify-content-between"> {% endcomment %}
-                    <input id="saveValue" name="saveValue" value="0" hidden></input>
+                    <input type="text"id="saveValue" name="saveValue" hidden ></input>
                     <button class="btn btn-success" type="submit" onclick="PreviewPDF(1)">儲存</button>
                 {% comment %} </div> {% endcomment %}
                 
@@ -194,9 +194,11 @@
         }
     function PreviewPDF(saveValue){
         event.preventDefault();
-        const formData = new FormData(document.getElementById("PDF-Data"));
         const saveValueInput = document.getElementById("saveValue");
         saveValueInput.value = saveValue;
+
+        const formData = new FormData(document.getElementById("PDF-Data"));
+        console.log(saveValueInput);
         $.ajax({
             type: "POST",
             data: formData,

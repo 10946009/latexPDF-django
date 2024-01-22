@@ -110,7 +110,6 @@ def create(request,cid):
                 # 如果要存檔，就執行 save() 方法
                 process_formset_data(request.POST,problem_data) # 資料庫create new data
                 problem_form.save()
-                io_form.save()
                 
             return render(request, 'create_form_PDF.html',{'cid':cid})
         else:
