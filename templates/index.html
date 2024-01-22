@@ -20,10 +20,34 @@
                 <tr class="align-middle">
                     <td><a href="{% url 'create' problem.id %}">{{ problem.title }}</a></td>
                     <td>{{ problem.created_time }}</td>
-                    <td><button class="btn btn-danger">刪除</button></td>
+                    <td><button class="btn btn-danger" onclick="deleteProblem({{problem.id}})">刪除</button></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+<script>
+    function deleteProblem(id){
+        if(confirm("確定要刪除嗎?")){
+            $.ajax({
+                url: "{% url 'delete_problem' %}",
+                type: "POST",
+                data: {
+                    'id': id,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                },
+                success: function (data) {
+                    alert(data);
+                    location.reload();
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(xhr.status,thrownError);
+                }
+                
+            });
+        }
+            return false;
+    }
+</script>
 {% endblock body %}
