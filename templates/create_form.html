@@ -37,9 +37,8 @@
                                     {% endif %}
                                 </div>
                                 {% endfor %}
-                                {% if forloop.counter != 1 %}
                                 <button type="button" class="btn btn-danger col-md-1" onclick="this.parentNode.parentNode.remove();InputOutputRemove();" >X</button>
-                                {% endif %}
+
 
                                 <hr>
                             </div>
@@ -93,11 +92,12 @@
     
     
     console.log(totalForms.value);
+    const newFormCopy = $('#formset-container .formset-form:first').clone(); 
     function addFormset() {
         event.preventDefault();
+        const newForm = newFormCopy.clone();
         // 找到表單集的總表單數量
         // 複製第一個空白表單
-        const newForm = $('#formset-container .formset-form:first').clone();    
         // 修改input-output-number
         newForm.find('.io-number').html('#' + (parseInt(totalForms.value) + 1));
         // 替換克隆表單中的名稱，使其成為新的表單
