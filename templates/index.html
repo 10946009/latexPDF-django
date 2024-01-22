@@ -38,7 +38,20 @@
 </div>
 
 <script>
-    let table = new DataTable('#myTable');
+    let table = new DataTable('#myTable',{
+        /*設定語言*/
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.25/i18n/Chinese-traditional.json"
+        },
+        /*設定屬性(預設功能)區塊*/
+        "sPaginationType": "full_numbers", // 分頁樣式 預設為"full_numbers"，若需其他樣式才需設定
+        "pageLength":'50',// 預設為'10'，若需更改初始每頁顯示筆數，才需設定
+        "destroy": true, // 預設為false 是否銷毀當前暫存資料
+        "info": false, // 預設為true　是否要顯示"目前有 x  筆資料"
+        "autoWidth": false, // 預設為true　設置是否要自動調整表格寬度(false代表不要自適應)　　　　
+        "dom": 'lrtip',// 設置搜尋div、頁碼div...等基本位置/外觀..等，詳細可看官網
+    });
+
     function deleteProblem(id){
         const url = "{% url 'delete_problem'  %}";
         if(confirm("確定要刪除嗎?")){
