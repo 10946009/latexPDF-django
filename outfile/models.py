@@ -13,6 +13,7 @@ class Problem(models.Model):
     spec = models.TextField(blank=True, null=False, default='')
 
     created_time = models.DateTimeField(auto_now_add=True ,blank=True, null=True)
+    edited_time = models.DateTimeField(auto_now=True ,blank=True, null=True)
 
     def __str__(self):
         return self.title

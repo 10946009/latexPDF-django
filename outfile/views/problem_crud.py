@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect,HttpResponse
 from outfile.models import Problem
 
-def delete_problem(request):
+def delete_problem(request,cid = None):
     if request.method == 'POST':
         print(request.POST)
         cid = request.POST.get('cid', None)
