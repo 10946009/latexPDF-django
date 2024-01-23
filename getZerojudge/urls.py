@@ -22,6 +22,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", index.index, name="index"),
     path("delete/", problem_crud.delete_problem, name="delete_problem"),
+    path("create/problem", problem_crud.create, name="create_problem"),
     path("create/<int:cid>", create.create, name="create"),
     path("create/<int:cid>/downloadZIP", create.download_zip),
     path("getZerojudge/<int:cid>", get_zerojudge.get_zerojudge),

@@ -12,3 +12,7 @@ def delete_problem(request,cid = None):
         else:
             return HttpResponse('刪除失敗')
     return HttpResponse('請求失敗')
+
+def create(request):
+    new_problem = Problem.objects.create()
+    return redirect(f'/create/{new_problem.id}')
