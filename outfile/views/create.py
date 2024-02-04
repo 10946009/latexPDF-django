@@ -79,6 +79,8 @@ def create_tex(form_data,problem_data):
 def create(request,cid):
     problem = Problem.objects.get(id=cid)
     path_manager = PathManager(cid)
+    show_pdf = path_manager.exist_problem_pdf()
+
     # 取得現有的 Problem 對象
     problem_data = get_object_or_404(Problem, id=cid)
     if request.method == 'POST':
@@ -110,8 +112,9 @@ def create(request,cid):
                 # 如果要存檔，就執行 save() 方法
                 process_formset_data(request.POST,problem_data) # 資料庫create new data
                 problem_form.save()
-                
-            return render(request, 'create_form_PDF.html',{'cid':cid})
+            
+            
+            return render(request, 'create_form_PDF.html',{'cid':cid,'show_pdf':show_pdf})
         else:
             print("ERROR!",problem_form.errors,io_form.errors)
 
@@ -123,7 +126,8 @@ def create(request,cid):
 
     # if input_output_form.is_valid():
     #     input_output_form.save()
-    return render(request, 'create.html', {'cid':cid,'problem_form': problem_form, 'formset': io_form })
+    
+    return render(request, 'create.html', {'cid':cid,'problem_form': problem_form, 'formset': io_form ,'show_pdf':show_pdf})
 
 
 def download_zip(request, cid):
