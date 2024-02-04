@@ -1,0 +1,25 @@
+#sidebar {
+    position: fixed;
+    right: -600px;
+    width: 600px;
+    height: 100%;
+    background: #f8f9fa;
+    padding: 20px;
+    transition: right 0.3s;
+    top:0;
+}
+#sidebar.active {
+    right: 0;
+}
+#dismiss {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background: #f8f9fa;
+    position: absolute;
+    top:50%;
+    left: 0px;
+    cursor: pointer;
+    border-radius: 50%;
+}

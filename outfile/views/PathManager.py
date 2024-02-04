@@ -17,7 +17,9 @@ class PathManager:
 
     def print_all_path(self):
         return [self.PATH, self.SAMPLE_TEX, self.DOM, self.SAMPLE, self.MAIN_TEX, self.MAIN_PDF, self.PROBLEM_PDF]
-
+    
+    def exist_problem_pdf(self):
+        return os.path.isfile(self.PROBLEM_PDF)
     # def __init__(self, problem_object):
     #     self.path = os.path.join("static", "latex", f'{problem_object.id}')
 

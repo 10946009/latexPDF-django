@@ -10,7 +10,7 @@
 <!-- 引入 DataTables JS -->
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <!-- 在表格上应用 DataTables -->
-{% comment %} <link rel="stylesheet" href="{% static "css/index.css" %}"> {% endcomment %}
+<link rel="stylesheet" href="{% static "css/index.css" %}">
 {% endblock content %}
 
 {% block body %}
@@ -27,16 +27,22 @@
         <tbody>
             {% for problem in problem_list %}
                 <tr class="align-middle">
-                    <td><a href="{% url 'create' problem.id %}">{{ problem.title }}</a></td>
+                    <td onclick="redirectToLink('{% url 'create' problem.id %}')" style="cursor:pointer;"><a href="{% url 'create' problem.id %}">{{ problem.title }}</a></td>
                     <td>{{ problem.created_time }}</td>
                     <td>{{ problem.edited_time }}</td>
-                    <td><button class="btn btn-danger" onclick="deleteProblem({{problem.id}})">刪除</button></td>
+                    <td><button class="btn btn-success" onclick="getPDF({{problem.id}})">預覽PDF</button>　<button class="btn btn-danger" onclick="deleteProblem({{problem.id}})">刪除</button></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 
+<div id="sidebar">
+    <div id="dismiss">&gt;</div>
+    <div id="PDFdiv" style="height:100%;">
+    {% include "create_form_PDF.html" %}
+    </div>
+</div>
 <script>
     let table = new DataTable('#myTable',{
         /*設定語言*/
@@ -63,7 +69,6 @@
                     'csrfmiddlewaretoken': '{{ csrf_token }}',
                 },
                 success: function (data) {
-                    alert(data);
                     location.reload();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -74,5 +79,31 @@
         }
             return false;
     }
+    function getPDF(id){
+        $.ajax({
+            type: "GET",
+            url:`/pdf/get/${id}`,
+            data: {
+                'cid': id,
+            },
+            success: function (data) {
+                const PDFdiv = $("#PDFdiv");
+                PDFdiv.html(data);
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.status);
+                alert(thrownError);
+            }
+        });
+            $('#sidebar').addClass('active');
+        }
+
+        $('#dismiss').click(function() {
+            $('#sidebar').removeClass('active');
+        });
+    
+    function redirectToLink(url) {
+        window.location.href = url;
+      }
 </script>
 {% endblock body %}
