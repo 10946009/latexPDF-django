@@ -104,11 +104,10 @@ def sample_file(path,name,lststring):
 #         # output_file(all_file_path,'input_format.tex',lst[1])
 #         # output_file(all_file_path,'output_format.tex',lst[2])
 #         # output_file(all_file_path,'problem.tex','\problem{./}{'+title+'}{1}{100}')
-#         # output_file(all_file_path,'spec.tex','')
 #         # output_file(all_file_path,'hint.tex','')
 #         # output_file(path_dom,'problem.yaml',f'name: {title}')
 #         # output_file(path_dom,'domjudge-problem.ini',f"timelimit='{timelimit}'")
-#         problem_dict = {'title':title,'timelimit':timelimit,'statement':lst[0],'input_format':lst[1],'output_format':lst[2],'spec':'','hint':''}
+#         problem_dict = {'title':title,'timelimit':timelimit,'statement':lst[0],'input_format':lst[1],'output_format':lst[2],'hint':''}
 #         # 放入資料
 #         # initial_data = {"statement":lst[0],"input_format":lst[1],"output_format":lst[2],"title":title,"timelimit":timelimit}
 
@@ -198,7 +197,7 @@ def get_zerojudge(request,cid):
         #題目來源變數
         problem_from = f'% 題目來源:https://zerojudge.tw/ShowProblem?problemid={number} \n'
         
-        problem_dict = {'title':title,'timelimit':timelimit,'statement':problem_from+lst[0],'input_format':lst[1],'output_format':lst[2],'spec':'','hint':''}
+        problem_dict = {'title':title,'timelimit':timelimit,'statement':problem_from+lst[0],'input_format':lst[1],'output_format':lst[2],'hint':''}
     except Exception as err:
         print(err)
         print(number,"無此題目")

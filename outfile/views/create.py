@@ -15,7 +15,7 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
 }
 
-FILE_NAME = ['title','statement','input_format','output_format','spec','hint']
+FILE_NAME = ['title','statement','input_format','output_format','hint']
 
 def output_file(path,name,string):
     os.makedirs(path, exist_ok=True)
@@ -49,7 +49,7 @@ def create_tex(form_data,problem_data):
     os.makedirs(path_manager.SECRET, exist_ok=True)
 
 
-    #寫入檔案 stament,input_format,output_format,spec,hint
+    #寫入檔案 stament,input_format,output_format,hint
     for name in FILE_NAME:
         output_file(path_manager.DOM,f'{name}.tex', getattr(problem_data, name))
     output_file(path_manager.DOM,'problem.tex','\problem{./}{'+problem_data.title+'}{1}{100}')
@@ -123,7 +123,6 @@ def create(request,cid):
 
     # if input_output_form.is_valid():
     #     input_output_form.save()
-    
     return render(request, 'create.html', {'cid':cid,'problem_form': problem_form, 'formset': io_form })
 
 

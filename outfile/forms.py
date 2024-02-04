@@ -13,7 +13,6 @@ class ProblemForm(ModelForm):
             'input_format': '範例輸入',
             'output_format': '範例輸出',
             'hint': 'hint',
-            'spec': 'spec',
         }
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
@@ -22,7 +21,6 @@ class ProblemForm(ModelForm):
             'input_format': forms.Textarea(attrs={'class': 'form-control'}),
             'output_format': forms.Textarea(attrs={'class': 'form-control'}),
             'hint': forms.Textarea(attrs={'class': 'form-control'}),
-            'spec': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
 class InputOutputForm(ModelForm):

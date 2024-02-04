@@ -10,7 +10,6 @@ class Problem(models.Model):
     input_format = models.TextField(blank=True, null=False, default='')
     output_format = models.TextField(blank=True, null=False, default='')
     hint = models.TextField(blank=True, null=False, default='')
-    spec = models.TextField(blank=True, null=False, default='')
 
     created_time = models.DateTimeField(auto_now_add=True ,blank=True, null=True)
     edited_time = models.DateTimeField(auto_now=True ,blank=True, null=True)
