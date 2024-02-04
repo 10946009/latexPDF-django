@@ -25,8 +25,8 @@ urlpatterns = [
     path("create/problem", problem_crud.create, name="create_problem"),
     path("create/<int:cid>", create.create, name="create"),
     path("create/<int:cid>/downloadZIP", create.download_zip),
+    path("getZerojudge/<int:cid>", get_zerojudge.get_zerojudge),
+
     path("pdf/get/<int:cid>", pdf.get, name="get_pdf"),
 
-
-    path("PDF/get/<int:cid>", get_zerojudge.get_zerojudge),
 ]
