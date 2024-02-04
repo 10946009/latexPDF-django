@@ -6,6 +6,9 @@ from outfile.forms import ProblemForm,InputOutputFormSet
 import subprocess
 import os
 from outfile.models import InputOutput, Problem
+from .PathManager import PathManager
+from django.http import HttpResponse
+from requests.exceptions import RequestException
 
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
@@ -64,7 +67,7 @@ def get_zerojudge(request,cid):
     all_file_path = os.path.join("static", "latex", f'{cid}')
     path_dom = os.path.join(all_file_path, "dom")
     main_path = os.path.join("static","latex","main.tex")
-
+    show_pdf = PathManager(cid).exist_problem_pdf()
     number = request.POST['ZeroJudgeNumber']
     print("正在爬取題目",number)
     try:
@@ -100,11 +103,16 @@ def get_zerojudge(request,cid):
         problem_from = f'% 題目來源:https://zerojudge.tw/ShowProblem?problemid={number} \n'
         
         problem_dict = {'title':title,'timelimit':timelimit,'statement':problem_from+lst[0],'input_format':lst[1],'output_format':lst[2],'hint':''}
+    except RequestException as err:
+        print(err)
+        print("網路連接失敗")
+        return HttpResponse("網路連接失敗", status=503)  # 503 Service Unavailable
     except Exception as err:
         print(err)
         print(number,"無此題目")
+        return HttpResponse("無此題目", status=404)
     problem_form = ProblemForm(initial=problem_dict)
     io_form = InputOutputFormSet(initial=all_io)
     io_form.extra = len(all_io)
     print(all_io)
-    return render(request, 'create_form.html', {'cid':cid,'problem_form': problem_form, 'formset': io_form, 'number':number })
+    return render(request, 'create_form_form.html', {'cid':cid,'problem_form': problem_form, 'formset': io_form, 'number':number,'show_pdf':show_pdf})
