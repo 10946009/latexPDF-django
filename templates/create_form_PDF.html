@@ -1,2 +1,7 @@
 {% load static %}
+{%if show_pdf %}
 <embed src="{% static "latex/" %}{{cid}}/dom/problem.pdf" width="100%" height="100%" type="application/pdf">
+{% else %}
+<div class="not-found-PDF">
+    <p>找不到PDF!</p>
+{% endif %}

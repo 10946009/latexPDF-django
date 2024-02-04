@@ -12,47 +12,8 @@
     </div>
 {% endif %}
     <div class="row">
-        <div class="col-md-6 dropdown" >
-            <form method="post" class="card crate-form" style="margin:10px;padding:10px;" id="PDF-Data">
-                <label>Zerojudge抓取：<input id="ZeroJudgeNumber" value="{{number}}" placeholder="輸入ZeruJudge題號" ></input><button class="btn-dark btn" onclick="GetZeroJudge({{cid}})">GET</button></label> 
-                {% csrf_token %}
-                {{ problem_form.as_p }}
-                {{ formset.management_form }}
-
-                <label>測試資料輸入</label>
-                <div id="formset-container" style="padding:10px;">
-                    {% for form in formset %}
-                        <div class="formset-form" data-set= "{{forloop.counter0}}" >
-                            <div class="row align-items-center">
-                                <div class="io-number col-md-1"><label id="input-output-number">#{{ forloop.counter }}</label></div>
-                                {% for field in form %}
-                                <div class="form-group col-md-5" style="{%  if field.label != "輸入" and field.label != "輸出" %}display:none;{% endif%}">
-                                    {%  if field.label == "輸入" or field.label == "輸出" %}
-                                        <label id="{{ field.id_for_label }}">{{ field.label }}</label>
-                                    {% endif%}
-                                    {% if field.label == "Id" or field.label == "Problem" %}
-                                        <input type="text" class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="" readonly>
-                                    {% else %}
-                                        {{ field }}
-                                    {% endif %}
-                                </div>
-                                {% endfor %}
-                                <button type="button" class="btn btn-danger col-md-1" onclick="this.parentNode.parentNode.remove();InputOutputRemove();" >X</button>
-
-
-                                <hr>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-                            
-                <button class="btn btn-primary"onclick="addFormset()">+</button> <!-- Add this line -->
-                {% comment %} <div class="row justify-content-between"> {% endcomment %}
-                    <input type="text"id="saveValue" name="saveValue" hidden ></input>
-                    <button class="btn btn-success" type="submit" onclick="PreviewPDF(1)">儲存</button>
-                {% comment %} </div> {% endcomment %}
-                
-            </form>
+        <div class="col-md-6 dropdown" id="Formdiv" >
+            {% include "create_form_form.html" %}
         </div>
         <div class="col-md-6 card fix-div-right" >
             <row>
