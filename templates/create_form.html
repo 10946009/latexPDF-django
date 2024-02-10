@@ -45,6 +45,7 @@
             },
             success: function (data) {
                 $("#Formdiv").html(data);
+                totalForms = document.getElementById("id_inputoutput_set-TOTAL_FORMS");
                 
             },
             error: function (data) {
@@ -177,6 +178,7 @@
                 PDFdiv.html(data);
                 if(saveValue == 1){
                     alert("儲存成功");
+                    location.reload();
                 }
                 else if(saveValue == 0){
                     alert("預覽成功");
