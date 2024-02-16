@@ -14,23 +14,26 @@
 {% endblock content %}
 
 {% block body %}
-<div class="container card">
-    <table  class="table table-striped " id="myTable">
+<div class="container card p-3">
+    <table class="table table-striped table-hover" id="myTable">
         <thead>
             <tr>
                 <th>標題</th>
                 <th>創建日期</th>
                 <th>修改日期</th>
-                <th>操作</th>
+                <th class="w-25">操作</th>
             </tr>
         </thead>
         <tbody>
             {% for problem in problem_list %}
                 <tr class="align-middle">
                     <td onclick="redirectToLink('{% url 'create' problem.id %}')" style="cursor:pointer;"><a href="{% url 'create' problem.id %}">{{ problem.title }}</a></td>
-                    <td>{{ problem.created_time }}</td>
-                    <td>{{ problem.edited_time }}</td>
-                    <td><button class="btn btn-success" onclick="getPDF({{problem.id}})">預覽PDF</button>　<button class="btn btn-danger" onclick="deleteProblem({{problem.id}})">刪除</button></td>
+                    <td onclick="redirectToLink('{% url 'create' problem.id %}')" style="cursor:pointer;">{{ problem.created_time }}</td>
+                    <td onclick="redirectToLink('{% url 'create' problem.id %}')" style="cursor:pointer;">{{ problem.edited_time }}</td>
+                    <td>
+                        <button class="btn btn-success mr-2" onclick="getPDF({{problem.id}})">預覽PDF</button>
+                        <button class="btn btn-danger" onclick="deleteProblem({{problem.id}})">刪除</button>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -54,7 +57,7 @@
         "pageLength":'50',// 預設為'10'，若需更改初始每頁顯示筆數，才需設定
         "destroy": true, // 預設為false 是否銷毀當前暫存資料
         "info": false, // 預設為true　是否要顯示"目前有 x  筆資料"
-        "autoWidth": false, // 預設為true　設置是否要自動調整表格寬度(false代表不要自適應)　　　　
+        "autoWidth": true, // 預設為true　設置是否要自動調整表格寬度(false代表不要自適應)　　　　
         "dom": 'lrtip',// 設置搜尋div、頁碼div...等基本位置/外觀..等，詳細可看官網
     });
 
