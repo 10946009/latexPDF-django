@@ -19,7 +19,7 @@ label,
 
 
 textarea {
-    font-size: 1.2em !important;
+    font-size: 0.8em !important;
 }
 
 .fix-div-right {
@@ -49,4 +49,8 @@ textarea {
     font-size: 20px;
     font-weight: bold;
     color: #808080;
+}
+
+.form-control textarea {
+    rows: 5;
 }
