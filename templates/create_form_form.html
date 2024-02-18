@@ -10,21 +10,18 @@
             <div class="formset-form" data-set= "{{forloop.counter0}}" >
                 <div class="row align-items-center">
                     <div class="io-number col-md-1"><label id="input-output-number">#{{ forloop.counter }}</label></div>
-                    {% for field in form %}
-                    <div class="form-group col-md-5" style="{%  if field.label != "輸入" and field.label != "輸出" %}display:none;{% endif%}">
-                        {%  if field.label == "輸入" or field.label == "輸出" %}
-                            <label id="{{ field.id_for_label }}">{{ field.label }}</label>
-                        {% endif%}
-                        {% if field.label == "Id" or field.label == "Problem" %}
-                            <input type="text" class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="" readonly>
-                        {% else %}
-                            {{ field }}
-                        {% endif %}
+                    <div class="form-group col-md-5">
+                        {{ form.input.label_tag }}
+                        {{ form.input }}
                     </div>
-                    {% endfor %}
-                    <button type="button" class="btn btn-danger col-md-1" onclick="this.parentNode.parentNode.remove();InputOutputRemove();" >X</button>
-
-
+                    <div class="form-group col-md-5">
+                        {{ form.output.label_tag }}
+                        {{ form.output }}
+                    </div>
+                    <div class="row col-md-1">
+                        {{ form.is_sample }}
+                        <button type="button" class="btn btn-danger" onclick="this.parentNode.parentNode.remove();InputOutputRemove();" >X</button>
+                    </div>
                     <hr>
                 </div>
             </div>
