@@ -135,10 +135,6 @@
             const textarea = formset_form[i].getElementsByTagName("textarea");
             const select = formset_form[i].getElementsByTagName("select");
             const number = formset_form[i].getElementsByTagName("label")[0];
-            for (let j = 0; j < label.length; j++) {
-                const newFor = label[j].getAttribute("id").replace("-" + (i + 1) + "-", "-" + i + "-");
-                label[j].setAttribute("for", newFor);
-            }
             for (let j = 0; j < input.length; j++) {
                 const newName = input[j].getAttribute("name").replace("-" + (i + 1) + "-", "-" + i + "-");
                 input[j].setAttribute("name", newName);
@@ -230,8 +226,6 @@
             }
         });
     }
-
-
     document.querySelector('#ZeroJudgeNumber').addEventListener('input', function() {
         document.getElementById('errorMessage').textContent = '';
     });
