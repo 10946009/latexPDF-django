@@ -99,10 +99,12 @@ def create_tex(form_data,problem_data):
 
 
 def create(request, cid):
+    html_show_filed = ["輸出", "輸入"]
     problem = Problem.objects.get(id=cid)
     path_manager = PathManager(cid)
     show_pdf = path_manager.exist_problem_pdf()
-
+    create_pdf = True
+    
     # 取得現有的 Problem 對象
     problem_data = get_object_or_404(Problem, id=cid)
     if request.method == "POST":
@@ -120,7 +122,12 @@ def create(request, cid):
             # 複製模板 main.tex 到指定的path
             shutil.copyfile(path_manager.SAMPLE_TEX, path_manager.MAIN_TEX)
 
-            subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=path_manager.DOM)
+            # 產生PDF
+            if create_pdf:
+                subprocess.run(
+                    ["pdflatex", "-interaction=nonstopmode", "main.tex"],
+                    cwd=path_manager.DOM,
+                )
 
             # if pdf產生ok
             main_pdf_path = os.path.join(path_manager.DOM, "main.pdf")
@@ -159,6 +166,7 @@ def create(request, cid):
         "problem_form": problem_form,
         "formset": io_form,
         "show_pdf": show_pdf,
+        "html_show_filed": html_show_filed,
     }
 
     return render(request, "create.html", content)
