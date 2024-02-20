@@ -26,9 +26,8 @@ def output_file(path, name, string):
         f.write(string)
 
 
-def process_formset_data(request_data, problem_data):
+def process_formset_data(form_data, problem_data):
     # 将 QueryDict 转换为字典
-    form_data = dict(request_data)
     process_data = get_form_sample_secret_data(form_data)
 
     for input_data, output_data in process_data["sample"]:
