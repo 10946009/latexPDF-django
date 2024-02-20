@@ -25,10 +25,30 @@ def output_file(path, name, string):
         string = string.replace("\r\n", "\\\\\n")
         f.write(string)
 
-def process_formset_data(request_data,problem_data):
+
+def process_formset_data(request_data, problem_data):
     # 将 QueryDict 转换为字典
     form_data = dict(request_data)
-    # 获取表单集中的 DELETE 字段
+    process_data = get_form_sample_secret_data(form_data)
+
+    for input_data, output_data in process_data["sample"]:
+        is_sample = True
+        InputOutput.objects.create(
+            problem=problem_data,
+            input=input_data,
+            output=output_data,
+            is_sample=is_sample,
+        )
+
+    for input_data, output_data in process_data["secret"]:
+        is_sample = False
+        InputOutput.objects.create(
+            problem=problem_data,
+            input=input_data,
+            output=output_data,
+            is_sample=is_sample,
+        )
+
 #把form表單資料轉成dict,並分成sample和secret
 def get_form_sample_secret_data(form_data):
     sample = []
