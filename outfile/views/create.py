@@ -29,6 +29,24 @@ def process_formset_data(request_data,problem_data):
     # 将 QueryDict 转换为字典
     form_data = dict(request_data)
     # 获取表单集中的 DELETE 字段
+#把form表單資料轉成dict,並分成sample和secret
+def get_form_sample_secret_data(form_data):
+    sample = []
+    secret = []
+
+    for i in range(int(form_data["inputoutput_set-TOTAL_FORMS"][0])):
+        is_sample_data = form_data.get(f"inputoutput_set-{i}-is_sample", None)
+        input_data = form_data.get(f"inputoutput_set-{i}-input", None)
+        output_data = form_data.get(f"inputoutput_set-{i}-output", None)
+
+        print("嗨",input_data, output_data, is_sample_data)
+        if is_sample_data:
+            sample.append((input_data, output_data))
+        else:
+            secret.append((input_data, output_data))
+
+    data_list = {"sample": sample, "secret": secret}
+    return data_list
     # delete old data
     for i in range(int(form_data['inputoutput_set-TOTAL_FORMS'][0])):
         delete_data = form_data.get(f'inputoutput_set-{i}-DELETE', None)
