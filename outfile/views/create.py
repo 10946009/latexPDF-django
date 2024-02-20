@@ -47,53 +47,51 @@ def get_form_sample_secret_data(form_data):
 
     data_list = {"sample": sample, "secret": secret}
     return data_list
-    # delete old data
-    for i in range(int(form_data['inputoutput_set-TOTAL_FORMS'][0])):
-        delete_data = form_data.get(f'inputoutput_set-{i}-DELETE', None)
-        if delete_data != ['on']:
-            #create new data
-            input_data = form_data.get(f'inputoutput_set-{i}-input', None)
-            output_data = form_data.get(f'inputoutput_set-{i}-output', None)
-            InputOutput.objects.create(problem=problem_data,input=input_data[0],output=output_data[0])
-            print("add",i,input_data,output_data)
-            
 
-def create_tex(form_data,problem_data):
-    #delete old data
+def create_tex(form_data, problem_data):
+    # 取得表單資料
+    process_data = get_form_sample_secret_data(form_data)
+    # delete old data
     InputOutput.objects.filter(problem=problem_data).delete()
-    path_manager = PathManager(problem_data.id) 
+    path_manager = PathManager(problem_data.id)
     # 產生 PDF
 
     # 定義路徑和產生資料夾
     os.makedirs(path_manager.SAMPLE, exist_ok=True)
     os.makedirs(path_manager.SECRET, exist_ok=True)
 
-
-    #寫入檔案 stament,input_format,output_format,hint
+    # 寫入檔案 stament,input_format,output_format,hint
     for name in FILE_NAME:
-        output_file(path_manager.DOM,f'{name}.tex', getattr(problem_data, name))
-    output_file(path_manager.DOM,'problem.tex','\problem{./}{'+problem_data.title+'}{1}{100}')
-    output_file(path_manager.DOM,'problem.yaml',f'name: {problem_data.title}')
-    output_file(path_manager.DOM,'domjudge-problem.ini',f"timelimit='{problem_data.timelimit}'")
-    
-    #寫入input,output
+        output_file(path_manager.DOM, f"{name}.tex", getattr(problem_data, name))
+    output_file(
+        path_manager.DOM,
+        "problem.tex",
+        "\problem{./}{" + problem_data.title + "}{1}{100}",
+    )
+    output_file(path_manager.DOM, "problem.yaml", f"name: {problem_data.title}")
+    output_file(
+        path_manager.DOM,
+        "domjudge-problem.ini",
+        f"timelimit='{problem_data.timelimit}'",
+    )
+
+    # 流水號
+    file_num = 1
+
+    # 寫入input,output
     # clear old sample
-    if os.path.exists(path_manager.SAMPLE):
-        shutil.rmtree(path_manager.SAMPLE)
-        os.makedirs(path_manager.SAMPLE, exist_ok=True)
-    for i in range(int(form_data['inputoutput_set-TOTAL_FORMS'][0])):
-        delete_data = form_data.get(f'inputoutput_set-{i}-DELETE', None)
-        print("delete",i,delete_data)
-        if delete_data != ['on']:
-            #create new data
-            input_data = form_data.get(f'inputoutput_set-{i}-input', None)
-            output_data = form_data.get(f'inputoutput_set-{i}-output', None)
-            print("add",i,input_data,output_data)
-            sample_file(path_manager.SAMPLE,f'{i+1}.in',input_data)
-            sample_file(path_manager.SAMPLE,f'{i+1}.ans',output_data)
+    save_path = {"sample":path_manager.SAMPLE,"secret":path_manager.SECRET}
+    for save_type , path in save_path.items():
+        if os.path.exists(path):
+            shutil.rmtree(path)
+            os.makedirs(path, exist_ok=True)
+
+        for input_data, output_data in process_data[save_type]:
+            sample_secret_file(path, f"{file_num}.in", input_data)
+            sample_secret_file(path, f"{file_num}.ans", output_data)
+            file_num += 1
+        
     
-    # copy main.tex to path
-    shutil.copyfile(path_manager.SAMPLE_TEX, path_manager.MAIN_TEX)
 
 
 
