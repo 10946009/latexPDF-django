@@ -4,23 +4,25 @@ import shutil
 from bs4 import BeautifulSoup
 from django.shortcuts import render
 import requests
-from outfile.forms import InputOutputFormSet, ProblemForm,InputOutputForm
+from outfile.forms import InputOutputFormSet, ProblemForm, InputOutputForm
 import subprocess
 import os
 from django.shortcuts import get_object_or_404
-from outfile.models import Problem,InputOutput
-from .get_zerojudge import sample_file
+from outfile.models import Problem, InputOutput
+from .get_zerojudge import sample_secret_file
 from .PathManager import PathManager
+
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36"
 }
 
-FILE_NAME = ['title','statement','input_format','output_format','hint']
+FILE_NAME = ["title", "statement", "input_format", "output_format", "hint"]
 
-def output_file(path,name,string):
+
+def output_file(path, name, string):
     os.makedirs(path, exist_ok=True)
-    with open(f'{path}/{name}','w',encoding='UTF-8') as f:
-        string = string.replace('\r\n', '\\\\\n')
+    with open(f"{path}/{name}", "w", encoding="UTF-8") as f:
+        string = string.replace("\r\n", "\\\\\n")
         f.write(string)
 
 def process_formset_data(request_data,problem_data):
@@ -76,47 +78,55 @@ def create_tex(form_data,problem_data):
     shutil.copyfile(path_manager.SAMPLE_TEX, path_manager.MAIN_TEX)
 
 
-def create(request,cid):
+
+
+def create(request, cid):
     problem = Problem.objects.get(id=cid)
     path_manager = PathManager(cid)
     show_pdf = path_manager.exist_problem_pdf()
 
     # 取得現有的 Problem 對象
     problem_data = get_object_or_404(Problem, id=cid)
-    if request.method == 'POST':
+    if request.method == "POST":
         print(request.POST)
         form_data = request.POST
-        save_value = request.POST.get('saveValue', None)
-        #定義資料驗證
+        save_value = request.POST.get("saveValue", None)
+        # 定義資料驗證
         problem_form = ProblemForm(form_data, instance=problem_data)
         io_form = InputOutputFormSet(form_data, instance=problem_data)
-        print(problem_form.is_valid(),io_form.is_valid())
+        print(problem_form.is_valid(), io_form.is_valid())
 
         if problem_form.is_valid() and io_form.is_valid():
-            create_tex(form_data,problem_data)
+            create_tex(form_data, problem_data)
+
+            # 複製模板 main.tex 到指定的path
+            shutil.copyfile(path_manager.SAMPLE_TEX, path_manager.MAIN_TEX)
 
             subprocess.run(['pdflatex', '-interaction=nonstopmode', 'main.tex'],cwd=path_manager.DOM)
 
             # if pdf產生ok
             main_pdf_path = os.path.join(path_manager.DOM, "main.pdf")
             if os.path.isfile(main_pdf_path):
-                    dom_problem = os.path.join(path_manager.DOM,"problem.pdf")
-                    dom_main_pdf = os.path.join(path_manager.DOM,"main.pdf")
-                    print('pdf產生ok')
-                    # delete old pdf
-                    if os.path.isfile(f'{path_manager.DOM}problem.pdf'):
-                        os.remove(dom_problem)
-                    os.rename(dom_main_pdf,dom_problem)
+                dom_problem = os.path.join(path_manager.DOM, "problem.pdf")
+                dom_main_pdf = os.path.join(path_manager.DOM, "main.pdf")
+                print("pdf產生ok")
+                # delete old pdf
+                if os.path.isfile(f"{path_manager.DOM}problem.pdf"):
+                    os.remove(dom_problem)
+                os.rename(dom_main_pdf, dom_problem)
             if save_value == "1":
                 print("save!")
                 # 如果要存檔，就執行 save() 方法
-                process_formset_data(request.POST,problem_data) # 資料庫create new data
+                process_formset_data(
+                    request.POST, problem_data
+                )  # 資料庫create new data
                 problem_form.save()
-            
-            
-            return render(request, 'create_form_PDF.html',{'cid':cid,'show_pdf':show_pdf})
+
+            return render(
+                request, "create_form_PDF.html", {"cid": cid, "show_pdf": show_pdf}
+            )
         else:
-            print("ERROR!",problem_form.errors,io_form.errors)
+            print("ERROR!", problem_form.errors, io_form.errors)
 
     # 如果是 GET 請求，填充表單數據
     problem_form = ProblemForm(instance=problem)
@@ -126,28 +136,33 @@ def create(request,cid):
 
     # if input_output_form.is_valid():
     #     input_output_form.save()
-    
-    return render(request, 'create.html', {'cid':cid,'problem_form': problem_form, 'formset': io_form ,'show_pdf':show_pdf})
+    content = {
+        "cid": cid,
+        "problem_form": problem_form,
+        "formset": io_form,
+        "show_pdf": show_pdf,
+    }
+
+    return render(request, "create.html", content)
 
 
 def download_zip(request, cid):
     path_manager = PathManager(cid)
     source_folder = path_manager.DOM
 
-    
     # 打包
-    shutil.make_archive(source_folder, 'zip', source_folder)
-    
-    archive_name = f'{source_folder}.zip'
-    
+    shutil.make_archive(source_folder, "zip", source_folder)
+
+    archive_name = f"{source_folder}.zip"
+
     # 打开打包后的文件
-    with open(archive_name, 'rb') as f:
-        response = HttpResponse(f.read(), content_type='application/zip')
-        
+    with open(archive_name, "rb") as f:
+        response = HttpResponse(f.read(), content_type="application/zip")
+
         # 设置头信息，防止缓存
-        response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-        response['Expires'] = now().strftime('%a, %d %b %Y %H:%M:%S GMT')
-    
+        response["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response["Expires"] = now().strftime("%a, %d %b %Y %H:%M:%S GMT")
+
     # 不再手动删除原始的 .zip 文件，因为 make_archive 已经完成了这个操作
 
     return response
