@@ -55,7 +55,7 @@ def get_crowd(url):
     return htmltext
 
 #針對sample的in,ans檔轉LF
-def sample_file(path,name,lststring):
+def sample_secret_file(path,name,lststring):
     print(lststring)
     lststring = lststring.replace('\r\n', '\n')
     os.makedirs(path, exist_ok=True)
@@ -89,7 +89,7 @@ def get_zerojudge(request,cid):
         input_output = lst[3:]
         
         all_io =list()
-        io_dict = {"input":'',"output":''}
+        io_dict = {"input":'',"output":'','is_sample':True}
         for index,io in enumerate(input_output):
             print("io",[io])
             io = io.replace('\r\n', '\n')
@@ -98,7 +98,7 @@ def get_zerojudge(request,cid):
             else:
                 io_dict['output'] = io
                 all_io.append(io_dict)
-                io_dict = {"input":'',"output":''}
+                io_dict = {"input":'',"output":'','is_sample':True}
         #題目來源變數
         problem_from = f'% 題目來源:https://zerojudge.tw/ShowProblem?problemid={number} \n'
         
