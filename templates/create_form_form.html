@@ -1,9 +1,33 @@
 <form method="post" class="card crate-form" style="margin:10px;padding:10px;" id="PDF-Data">
     <label>Zerojudge抓取：<input id="ZeroJudgeNumber" value="{{number}}" placeholder="輸入ZeruJudge題號" ></input><button class="btn-dark btn" onclick="GetZeroJudge({{cid}})">GET</button>　<span id="errorMessage"style="color:red;"></span></label> 
     {% csrf_token %}
-    {{ problem_form.as_p }}
-    {{ formset.management_form }}
 
+    <div class="row">
+        <div class="form-group col-md-8">
+        {{ problem_form.title.label_tag}}
+        {{ problem_form.title}}
+        </div>
+        <div class="form-group col-md-4">
+        {{ problem_form.timelimit.label_tag}}
+        {{ problem_form.timelimit}}
+        </div>
+        
+        <div class="form-group">
+        {{problem_form.statement.label_tag}}
+        {{problem_form.statement}}
+        </div>
+
+        <div class="form-group col-md-6">
+        {{ problem_form.input_format.label_tag}}
+        {{ problem_form.input_format}}
+        </div>
+        <div class="form-group col-md-6">
+        {{ problem_form.output_format.label_tag}}
+        {{ problem_form.output_format}}
+        </div>
+
+    </div>
+    {{ formset.management_form }}
     <label>測試資料輸入</label>
     <div id="formset-container" style="padding:10px;">
         {% for form in formset %}
