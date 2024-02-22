@@ -125,33 +125,38 @@
         // 表單集的總表單數量
         totalForms.value = parseInt(totalForms.value) - 1;
         console.log(totalForms);
-
+        this.parentNode.parentNode.parentNode.remove();
         // 重新編號
-        const formset = document.getElementById("formset-container");
-        const formset_form = formset.getElementsByClassName("formset-form");
+        ResetOrder();
+        let formset = document.getElementById("formset-container");
+        let formset_form = formset.getElementsByClassName("formset-form");
+        let regex = /-\d+-/g;
         for (let i = 0; i < formset_form.length; i++) {
-            const label = formset_form[i].getElementsByTagName("label");
-            const input = formset_form[i].getElementsByTagName("input");
-            const textarea = formset_form[i].getElementsByTagName("textarea");
-            const select = formset_form[i].getElementsByTagName("select");
-            const number = formset_form[i].getElementsByTagName("label")[0];
+            console.log(i);
+            let label = formset_form[i].getElementsByTagName("label");
+            let input = formset_form[i].getElementsByTagName("input");
+            let textarea = formset_form[i].getElementsByTagName("textarea");
+            let select = formset_form[i].getElementsByTagName("select");
+            let number = formset_form[i].getElementsByTagName("label")[0];
             for (let j = 0; j < input.length; j++) {
-                const newName = input[j].getAttribute("name").replace("-" + (i + 1) + "-", "-" + i + "-");
+                let newName = input[j].getAttribute("name").replace(regex, "-" + i + "-");
                 input[j].setAttribute("name", newName);
                 input[j].setAttribute("id", newName);
             }
             for (let j = 0; j < textarea.length; j++) {
-                const newName = textarea[j].getAttribute("name").replace("-" + (i + 1) + "-", "-" + i + "-");
+                let newName = textarea[j].getAttribute("name").replace(regex, "-" + i + "-");
+                console.log(newName);
                 textarea[j].setAttribute("name", newName);
                 textarea[j].setAttribute("id", newName);
             }
             for (let j = 0; j < select.length; j++) {
-                const newName = select[j].getAttribute("name").replace("-" + (i + 1) + "-", "-" + i + "-");
+                let newName = select[j].getAttribute("name").replace(regex, "-" + i + "-");
                 select[j].setAttribute("name", newName);
                 select[j].setAttribute("id", newName);
             }
         }   
-        ResetOrder();
+        
+        formset_form = formset.getElementsByClassName("formset-form");
         }
     function PreviewPDF(saveValue){
         event.preventDefault();
