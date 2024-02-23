@@ -31,7 +31,11 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
-
+    //調整textarea的高度
+    let textarea = document.querySelectorAll('textarea')
+    for(let i = 0; i < textarea.length; i++){
+        textarea[i].rows = 5;
+    }
     document.getElementById("id_inputoutput_set-INITIAL_FORMS").value = 0;
     let totalForms = document.getElementById("id_inputoutput_set-TOTAL_FORMS");
     function GetZeroJudge(cid) {
@@ -252,5 +256,8 @@
             }
         });
     }
+
+
+
 </script>
 
