@@ -44,7 +44,7 @@
                     </div>
                     <div class="row col-md-1">
                         {{ form.is_sample }}
-                        <button type="button" class="btn btn-danger" onclick="this.parentNode.parentNode.remove();InputOutputRemove();" >X</button>
+                        <button type="button" class="btn btn-danger" onclick="InputOutputRemove.call(this);" >X</button>
                     </div>
                     <hr>
                 </div>

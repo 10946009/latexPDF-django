@@ -37,8 +37,8 @@ class InputOutputForm(ModelForm):
             "is_sample": "範例",
         }
         widgets = {
-            "input": forms.Textarea(attrs={"class": "form-control"}),
-            "output": forms.Textarea(attrs={"class": "form-control"}),
+            "input": forms.Textarea(attrs={"class": "form-control inputoutput-output"}),
+            "output": forms.Textarea(attrs={"class": "form-control inputoutput-output"}),
             "is_sample": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 

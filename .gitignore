@@ -4,3 +4,4 @@ getZerojudge/__pycache__
 outfile/__pycache__
 outfile/migrations
 outfile/views/__pycache__
+static/latex
