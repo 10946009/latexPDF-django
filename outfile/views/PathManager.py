@@ -4,7 +4,8 @@ from enum import Enum
 class PathManager:
     def __init__(self, dir_name):
         self.PATH = os.path.join("static", "latex",str(dir_name))
-        self.SAMPLE_TEX = os.path.join("static", "latex", "main.tex")
+        self.SAMPLE_DIR = os.path.join("static", "sample")
+        self.INIT_FILE = [ os.path.join(self.SAMPLE_DIR, file) for file in os.listdir(self.SAMPLE_DIR)]
         self.DOM = os.path.join(self.PATH, "dom")
         self.DOM_ZIP = os.path.join(self.PATH, "dom.zip")
         self.MAIN_TEX = os.path.join(self.DOM, "main.tex")

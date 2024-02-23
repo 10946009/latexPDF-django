@@ -29,7 +29,8 @@ def output_file(path, name, string):
 def process_formset_data(form_data, problem_data):
     # 将 QueryDict 转换为字典
     process_data = get_form_sample_secret_data(form_data)
-
+    # delete old data
+    InputOutput.objects.filter(problem=problem_data).delete()
     for input_data, output_data in process_data["sample"]:
         is_sample = True
         InputOutput.objects.create(
@@ -70,8 +71,6 @@ def get_form_sample_secret_data(form_data):
 def create_tex(form_data, problem_data):
     # 取得表單資料
     process_data = get_form_sample_secret_data(form_data)
-    # delete old data
-    InputOutput.objects.filter(problem=problem_data).delete()
     path_manager = PathManager(problem_data.id)
     # 產生 PDF
 
@@ -137,7 +136,9 @@ def create(request, cid):
             create_tex(form_data, problem_data)
 
             # 複製模板 main.tex 到指定的path
-            shutil.copyfile(path_manager.SAMPLE_TEX, path_manager.MAIN_TEX)
+            for file in path_manager.INIT_FILE:
+                if not os.path.exists(os.path.join(path_manager.DOM, os.path.basename(file))):
+                    shutil.copy(file, path_manager.DOM)
 
             # 產生PDF
             if create_pdf:
@@ -157,7 +158,6 @@ def create(request, cid):
                     os.remove(dom_problem)
                 os.rename(dom_main_pdf, dom_problem)
             if save_value == "1":
-                print("save!")
                 # 如果要存檔，就執行 save() 方法
                 process_formset_data(
                     request.POST, problem_data
