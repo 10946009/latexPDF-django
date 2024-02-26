@@ -1,3 +1,4 @@
+import time
 from django.http import HttpResponse
 from django.utils.timezone import now
 import shutil
@@ -120,7 +121,7 @@ def create(request, cid):
     path_manager = PathManager(cid)
     show_pdf = path_manager.exist_problem_pdf()
     create_pdf = True
-    
+    timestamp = int(time.time())
     # 取得現有的 Problem 對象
     problem_data = get_object_or_404(Problem, id=cid)
     if request.method == "POST":
@@ -184,6 +185,7 @@ def create(request, cid):
         "formset": io_form,
         "show_pdf": show_pdf,
         "html_show_filed": html_show_filed,
+        'timestamp': timestamp,
     }
 
     return render(request, "create.html", content)
