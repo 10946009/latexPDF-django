@@ -1,61 +1,85 @@
-<form method="post" class="card crate-form" style="margin:10px;padding:10px;" id="PDF-Data">
-    <label>Zerojudge抓取：<input id="ZeroJudgeNumber" value="{{number}}" placeholder="輸入ZeruJudge題號" ></input><button class="btn-dark btn" onclick="GetZeroJudge({{cid}})">GET</button>　<span id="errorMessage"style="color:red;"></span></label> 
-    {% csrf_token %}
-
-    <div class="row">
-        <div class="form-group col-md-8">
-        {{ problem_form.title.label_tag}}
-        {{ problem_form.title}}
-        </div>
-        <div class="form-group col-md-4">
-        {{ problem_form.timelimit.label_tag}}
-        {{ problem_form.timelimit}}
-        </div>
-        
-        <div class="form-group">
-        {{problem_form.statement.label_tag}}
-        {{problem_form.statement}}
-        </div>
-
-        <div class="form-group col-md-6">
-        {{ problem_form.input_format.label_tag}}
-        {{ problem_form.input_format}}
-        </div>
-        <div class="form-group col-md-6">
-        {{ problem_form.output_format.label_tag}}
-        {{ problem_form.output_format}}
-        </div>
-
+{% load static %}
+<div class="d-flex align-items-start">
+    <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist"  aria-orientation="vertical">
+      <button class="nav-link active" id="v-pills-problem-tab" data-bs-toggle="pill" data-bs-target="#v-pills-problem" type="button" role="tab" aria-controls="v-pills-problem" aria-selected="true">題目</button>
+      <button class="nav-link" id="v-pills-input-output-tab" data-bs-toggle="pill" data-bs-target="#v-pills-input-output" type="button" role="tab" aria-controls="v-pills-input-output" aria-selected="false">測資</button>
     </div>
-    {{ formset.management_form }}
-    <label>測試資料輸入</label>
-    <div id="formset-container" style="padding:10px;">
-        {% for form in formset %}
-            <div class="formset-form" data-set= "{{forloop.counter0}}" >
-                <div class="row align-items-center">
-                    <div class="io-number col-md-1"><label id="input-output-number">#{{ forloop.counter }}</label></div>
-                    <div class="form-group col-md-5">
-                        {{ form.input.label_tag }}
-                        {{ form.input }}
-                    </div>
-                    <div class="form-group col-md-5">
-                        {{ form.output.label_tag }}
-                        {{ form.output }}
-                    </div>
-                    <div class="row col-md-1">
-                        {{ form.is_sample }}
-                        <button type="button" class="btn btn-danger" onclick="InputOutputRemove.call(this);" >X</button>
-                    </div>
-                    <hr>
-                </div>
+    <form method="post" class="card crate-form" style="padding:10px;" id="PDF-Data">
+        <div class="tab-content" id="v-pills-tabContent">
+    <div class="tab-pane fade show active" id="v-pills-problem" role="tabpanel" aria-labelledby="v-pills-problem-tab" tabindex="0">
+        <label>Zerojudge抓取：<input id="ZeroJudgeNumber" value="{{number}}" placeholder="輸入ZeruJudge題號" ></input><button class="btn-dark btn" onclick="GetZeroJudge({{cid}})">GET</button>　<span id="errorZjMessage"style="color:red;"></span></label> 
+        {% csrf_token %}
+        <div class="row">
+            <div class="form-group col-md-8">
+                {{ problem_form.title.label_tag}}
+            {{ problem_form.title}}
             </div>
-        {% endfor %}
-    </div>
-                
-    <button class="btn btn-primary"onclick="addFormset()">+</button> <!-- Add this line -->
-    {% comment %} <div class="row justify-content-between"> {% endcomment %}
-        <input type="text"id="saveValue" name="saveValue" hidden ></input>
-        <button class="btn btn-success" type="submit" onclick="PreviewPDF(1)">儲存</button>
-    {% comment %} </div> {% endcomment %}
+            <div class="form-group col-md-4">
+            {{ problem_form.timelimit.label_tag}}
+            {{ problem_form.timelimit}}
+            </div>
+            
+            <div class="form-group">
+                {{problem_form.statement.label_tag}}
+            {{problem_form.statement}}
+            </div>
     
+            <div class="form-group col-md-6">
+            {{ problem_form.input_format.label_tag}}
+            {{ problem_form.input_format}}
+            </div>
+            <div class="form-group col-md-6">
+            {{ problem_form.output_format.label_tag}}
+            {{ problem_form.output_format}}
+            </div>
+        </div>
+        {{ formset.management_form }}
+    </div>
+    <div class="tab-pane fade" id="v-pills-input-output" role="tabpanel" aria-labelledby="v-pills-input-output-tab" tabindex="0">
+        <div class="row align-items-center">
+            <div class="col-md-3"><label>測試資料輸入</label></div>
+        <div class="col-md-3"><button class="btn btn-success" type="submit" onclick="PreviewPDF(1)">儲存</button></div>
+        </div>
+        <div id="formset-container" style="padding:10px;">
+            {% for form in formset %}
+                <div class="formset-form" data-set= "{{forloop.counter0}}" >
+                    <div class="row align-items-center">
+                        <div class="io-number col-md-1"><label id="input-output-number">#{{ forloop.counter }}</label></div>
+                        <div class="form-group col-md-5">
+                            {{ form.input.label_tag }}
+                            {{ form.input }}
+                        </div>
+                        <div class="form-group col-md-5">
+                            {{ form.output.label_tag }}
+                            {{ form.output }}
+                        </div>
+                        <div class="row col-md-1">
+                            {{ form.is_sample }}
+                            <button type="button" class="btn btn-danger" onclick="InputOutputRemove.call(this);" >X</button>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+                    
+        <button class="btn btn-primary"onclick="addFormset()">+</button> <!-- Add this line -->
+        {% comment %} <div class="row justify-content-between"> {% endcomment %}
+            <input type="text"id="saveValue" name="saveValue" hidden ></input>
+            {% comment %} </div> {% endcomment %}
+        </div>
+        <button class="btn btn-success" type="submit" onclick="PreviewPDF(1)">儲存</button>
+    </div>
 </form>
+</div>
+<script src="{% static 'js/tabs.js' %}" ></script>
+
+
+
+<script>
+    //調整textarea的高度
+    var textarea = document.querySelectorAll('textarea')
+    for(let i = 0; i < textarea.length; i++){
+        textarea[i].rows = 5;
+    }
+</script>

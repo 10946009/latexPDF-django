@@ -31,12 +31,24 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
-    //調整textarea的高度
-    let textarea = document.querySelectorAll('textarea')
-    for(let i = 0; i < textarea.length; i++){
-        textarea[i].rows = 5;
-    }
     document.getElementById("id_inputoutput_set-INITIAL_FORMS").value = 0;
+    function CallMessage(message,color="danger"){
+        // change color
+            // Remove existing color classes
+        $('#errorMessage').removeClass('bg-danger text-white bg-success text-dark');
+
+        // Change color based on the 'color' parameter
+        if (color === 'danger') {
+            $('#errorMessage').addClass('bg-danger text-white');
+        } else if (color === 'success') {
+            $('#errorMessage').addClass('bg-success text-white');
+        }
+
+        const messageDiv = document.getElementById('errorMessage');
+        messageDiv.textContent = message;
+        $('.toast').toast({ delay: 1500 });
+        $('.toast').toast('show');
+    }
     let totalForms = document.getElementById("id_inputoutput_set-TOTAL_FORMS");
     function GetZeroJudge(cid) {
         const number = document.getElementById("ZeroJudgeNumber").value;
@@ -51,17 +63,17 @@
             success: function (data) {
                 $("#Formdiv").html(data);
                 totalForms = document.getElementById("id_inputoutput_set-TOTAL_FORMS");
-                
+                CallMessage(number + "讀取成功","success");
             },
             error: function (data) {
-                $("#errorMessage").html(data.responseText);
+                CallMessage(data.responseText);
+                $("#errorZjMessage").html(data.responseText);
             }
         });
     }
     
     const newFormCopy = $('#formset-container .formset-form:first').clone(); 
     function addFormset() {
-        
         event.preventDefault();
         const newForm = newFormCopy.clone();
         // 找到表單集的總表單數量
@@ -183,11 +195,11 @@
                 const PDFdiv = $("#PDFdiv");
                 PDFdiv.html(data);
                 if(saveValue == 1){
-                    alert("儲存成功");
-                    location.reload();
+                    //location.reload();
+                    CallMessage("儲存成功","success")
                 }
                 else if(saveValue == 0){
-                    alert("預覽成功");
+                    CallMessage("預覽成功","success")
                 }
                 loading.hide();
             },
