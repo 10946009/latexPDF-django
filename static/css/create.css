@@ -12,10 +12,11 @@ label,
     font-size: x-large;
     font-weight: bold;
     margin: 0 0 0 0;
-    padding-top: 20px;
-
 }
 
+.form-group{
+    padding-top: 10px;
+}
 
 
 textarea {
@@ -53,4 +54,10 @@ textarea {
 
 .form-control textarea {
     rows: 5;
+}
+
+#v-pills-tab {
+    position: fixed;
+    top: 100px;
+    left: 20px;
 }
