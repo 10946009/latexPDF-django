@@ -10,9 +10,9 @@ class Problem(models.Model):
     input_format = models.TextField(blank=True, null=False, default='')
     output_format = models.TextField(blank=True, null=False, default='')
     hint = models.TextField(blank=True, null=False, default='')
-
     created_time = models.DateTimeField(auto_now_add=True ,blank=True, null=True)
     edited_time = models.DateTimeField(auto_now=True ,blank=True, null=True)
+    ans_program = models.TextField(blank=True, null=False, default='')
 
     def __str__(self):
         return self.title
