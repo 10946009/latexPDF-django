@@ -17,6 +17,37 @@ headers = {
 
 FILE_NAME = ["title", "statement", "input_format", "output_format", "hint"]
 
+# 爬取別人github上的答案
+def get_git_other_ans(number):
+    print("hello")
+    env_python = "#!/usr/bin/env python \n"
+    # 放入別人的帳號/title即可
+    # 對方的答案檔名需要符合格式 例如:a001.py a002.py
+    other_giturl = ["10946009/pyanszj"]
+    for i in other_giturl:
+        ans_from = f'#from:https://github.com/{i}/blob/master/{number}.py \n'
+        htmltext = get_crowd(
+            f"https://raw.githubusercontent.com/{i}/master/{number}.py"
+        )
+        # 如果沒有404就抓答案
+        if "404: Not Found" not in htmltext.text:
+            print(f"取得了{i}的答案")
+            ans = env_python + ans_from + htmltext.text
+            print(ans)
+            return ans
+        else:
+            return None
+def get_hackmd_ans(number):
+    env_python = "#!/usr/bin/env python \n"
+    ans_from = f'#from:https://hackmd.io/@10946009/zj-{number} \n'
+    try:
+        htmltext = get_crowd(f"https://hackmd.io/@10946009/zj-{number}")
+        title = htmltext.find("div", class_='container-fluid markdown-body').text
+        ans = env_python + ans_from + list(title.split("```"))[1].replace("python=","")
+        return ans
+    except Exception as err:
+        print(err)
+        return None
 
 def output_file(path, name, string):
     os.makedirs(path, exist_ok=True)
@@ -66,8 +97,9 @@ def sample_secret_file(path, name, lststring):
     with open(f"{path}/{name}", "wb") as f:
         f.write((str(lststring) + "\n").encode())
 
+
 def get_zerojudge_problem(number):
-    problem_from = (f"% 題目來源:https://zerojudge.tw/ShowProblem?problemid={number} \n")
+    problem_from = f"% 題目來源:https://zerojudge.tw/ShowProblem?problemid={number} \n"
     try:
         htmltext = get_crowd("https://zerojudge.tw/ShowProblem?problemid=" + number)
     except RequestException as err:
@@ -91,7 +123,7 @@ def get_zerojudge_problem(number):
         st = replace_special_characters(st)
         lst.append(st)
     input_output = lst[3:]
-    #處理input output
+    # 處理input output
     all_io = list()
     io_dict = {"input": "", "output": "", "is_sample": True}
     for index, io in enumerate(input_output):
@@ -125,24 +157,29 @@ def get_zerojudge(request, cid):
 
     # 爬取題目
     zerojudge_data = get_zerojudge_problem(number)
+
+    #如果有錯誤訊息 回傳錯誤訊息
+    if "error" in zerojudge_data.keys():
+        return HttpResponse(zerojudge_data["error"], status=zerojudge_data["status"])
     
+    # 爬取題目答案
+    ans_program = get_hackmd_ans(number) if get_hackmd_ans(number) else get_git_other_ans(number)
+
     # 題目來源變數
-
-
-
     problem_dict = {
-        "title": zerojudge_data['title'],
+        "title": zerojudge_data["title"],
         "timelimit": timelimit,
-        "statement": zerojudge_data['statement'],
-        "input_format": zerojudge_data['input_format'],
-        "output_format": zerojudge_data['output_format'],
-        "hint": '',
+        "statement": zerojudge_data["statement"],
+        "input_format": zerojudge_data["input_format"],
+        "output_format": zerojudge_data["output_format"],
+        "hint": "",
+        "ans_program": ans_program,
     }
-    
+
     problem_form = ProblemForm(initial=problem_dict)
-    io_form = InputOutputFormSet(initial=zerojudge_data['input_output'])
-    io_form.extra = len(zerojudge_data['input_output'])
-    print(zerojudge_data['input_output'])
+    io_form = InputOutputFormSet(initial=zerojudge_data["input_output"])
+    io_form.extra = len(zerojudge_data["input_output"])
+    print(zerojudge_data["input_output"])
 
     content = {
         "cid": cid,
