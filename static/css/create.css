@@ -61,3 +61,11 @@ textarea {
     top: 100px;
     left: 20px;
 }
+#editor {
+    width: 100%;
+    height:100%; /* Or any other value */
+}
+.edit-div{
+    height: 50vh;
+    width: 100%;
+}

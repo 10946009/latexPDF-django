@@ -24,7 +24,7 @@ class ProblemForm(ModelForm):
             "input_format": forms.Textarea(attrs={"class": "form-control"}),
             "output_format": forms.Textarea(attrs={"class": "form-control"}),
             "hint": forms.Textarea(attrs={"class": "form-control"}),
-            "ans_program": forms.Textarea(attrs={"class": "form-control"}),
+            "ans_program": forms.Textarea(attrs={"class": "form-control",'hidden': 'true'}),
         }
 
 class InputOutputForm(ModelForm):

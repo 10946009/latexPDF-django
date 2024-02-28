@@ -46,55 +46,77 @@
             </div>
             <div class="tab-pane fade" id="v-pills-input-output" role="tabpanel" aria-labelledby="v-pills-input-output-tab" tabindex="0">
                 <div class="row align-items-center">
-                    <div class="col-md-3">
                         <label>測試資料輸入</label>
-                    </div>
                 </div>
                 
                 <div class="form-group">
-                    {{ problem_form.ans_program.label_tag }}
-                    <div class="row">
-                        <div class="col-md-9">
-                        {{ problem_form.ans_program }}
-                        </div>
-                        <div class="btn btn-outline-success col-md-2 " id="fileUploadButton">
-                            上傳答案
+                        <button type="button" class="btn btn-outline-primary col-md-4" data-bs-toggle="modal" data-bs-target="#editorModal">編輯答案程式碼</div>
+                            {{problem_form.ans_program}}
                             <input type="file" class="custom-file-input" id="pythonFile" name="pythonFile" accept=".py" hidden>
-                        </div>
-                    </div>
-                </div>
-                <div id="formset-container" style="padding:10px;">
-                    {% for form in formset %}
-                        <div class="formset-form" data-set="{{forloop.counter0}}">
-                            <div class="row align-items-center">
-                                <div class="io-number col-md-1">
-                                    <label id="input-output-number">#{{ forloop.counter }}</label>
+                    <div id="formset-container" style="padding:10px;">
+                        {% for form in formset %}
+                            <div class="formset-form" data-set="{{forloop.counter0}}">
+                                <div class="row align-items-center">
+                                    <div class="io-number col-md-1">
+                                        <label id="input-output-number">#{{ forloop.counter }}</label>
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        {{ form.input.label_tag }}
+                                        {{ form.input }}
+                                    </div>
+                                    <div class="form-group col-md-5">
+                                        {{ form.output.label_tag }}
+                                        {{ form.output }}
+                                    </div>
+                                    <div class="row col-md-1">
+                                        {{ form.is_sample }}
+                                        <button type="button" class="btn btn-danger" onclick="InputOutputRemove.call(this);">X</button>
+                                    </div>
+                                    <hr>
                                 </div>
-                                <div class="form-group col-md-5">
-                                    {{ form.input.label_tag }}
-                                    {{ form.input }}
-                                </div>
-                                <div class="form-group col-md-5">
-                                    {{ form.output.label_tag }}
-                                    {{ form.output }}
-                                </div>
-                                <div class="row col-md-1">
-                                    {{ form.is_sample }}
-                                    <button type="button" class="btn btn-danger" onclick="InputOutputRemove.call(this);">X</button>
-                                </div>
-                                <hr>
                             </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
+                    <button class="btn btn-primary col-md-12" onclick="addFormset()">+</button>
+                    <input type="text" id="saveValue" name="saveValue" hidden></input>
                 </div>
-                <button class="btn btn-primary col-md-12" onclick="addFormset()">+</button>
-                <input type="text" id="saveValue" name="saveValue" hidden></input>
             </div>
         </div>
     </form>
 </div>
+
+
+<!-- Button trigger modal -->
+
+  
+
+<!-- Modal -->
+<div class="modal fade modal-xl " id="editorModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">編輯答案程式碼</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="edit-div"><div id="editor" ></div></div>
+        </div>
+        <div class="modal-footer">
+          <div class="btn btn-outline-success col-md-2 " id="fileUploadButton">上傳答案</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 <script src="{% static 'js/tabs.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
+    // ace
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/python");
+        editor.setFontSize(18); // replace 18 with the desired font size
+        editor.setValue(document.getElementById('id_ans_program').value);
     //調整textarea的高度
     var textarea = document.querySelectorAll('textarea')
     for(let i = 0; i < textarea.length; i++){
@@ -112,6 +134,11 @@
         });
     });
 
+    //ace傳入答案+表單存入答案
+    function inputAnswer(data){
+        document.getElementById('id_ans_program').value = data;
+        editor.setValue(data);
+    }
     //偵測到有測資
     document.getElementById('pythonFile').addEventListener('change', function(e) {
         var file = e.target.files[0];
@@ -119,10 +146,11 @@
         
         reader.onload = function(e) {
             var contents = e.target.result;
-            document.getElementById('id_ans_program').value = contents;
+            inputAnswer(contents);
         };
         
         reader.readAsText(file);
     });
+
 
 </script>
