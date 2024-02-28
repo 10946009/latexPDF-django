@@ -66,6 +66,53 @@ def sample_secret_file(path, name, lststring):
     with open(f"{path}/{name}", "wb") as f:
         f.write((str(lststring) + "\n").encode())
 
+def get_zerojudge_problem(number):
+    problem_from = (f"% 題目來源:https://zerojudge.tw/ShowProblem?problemid={number} \n")
+    try:
+        htmltext = get_crowd("https://zerojudge.tw/ShowProblem?problemid=" + number)
+    except RequestException as err:
+        print(err)
+        print("網路連接失敗")
+        return {"error": "網路連接失敗", "status": 503}  # 503 Service Unavailable
+    except Exception as err:
+        print(err)
+        print(number, "無此題目")
+        return {"error": "無此題目", "status": 404}
+
+    title = htmltext.find("span", id="problem_title").text
+    problem = htmltext.find_all("div", class_="panel-body")
+    lst = []
+    for i in problem:
+        if "記憶體限制" in i.text:
+            break
+        st = i.text.strip()
+        # 取代常用特殊字元
+        # st = HanziConv.toTraditional(replace_special_characters(st))
+        st = replace_special_characters(st)
+        lst.append(st)
+    input_output = lst[3:]
+    #處理input output
+    all_io = list()
+    io_dict = {"input": "", "output": "", "is_sample": True}
+    for index, io in enumerate(input_output):
+        print("io", [io])
+        io = io.replace("\r\n", "\n")
+        if index % 2 == 0:
+            io_dict["input"] = io
+        else:
+            io_dict["output"] = io
+            all_io.append(io_dict)
+            io_dict = {"input": "", "output": "", "is_sample": True}
+
+    return {
+        "title": title,
+        "statement": problem_from + lst[0],
+        "input_format": lst[1],
+        "output_format": lst[2],
+        "hint": "",
+        "input_output": all_io,
+    }
+
 
 def get_zerojudge(request, cid):
     timelimit = 1
@@ -76,61 +123,26 @@ def get_zerojudge(request, cid):
     number = request.POST["ZeroJudgeNumber"]
     timestamp = int(time.time())
 
-    print("正在爬取題目", number)
-    try:
-        htmltext = get_crowd("https://zerojudge.tw/ShowProblem?problemid=" + number)
-        problem_all_text = []
-        title = htmltext.find("span", id="problem_title").text
-        problem = htmltext.find_all("div", class_="panel-body")
-        lst = []
+    # 爬取題目
+    zerojudge_data = get_zerojudge_problem(number)
+    
+    # 題目來源變數
 
-        for i in problem:
-            if "記憶體限制" in i.text:
-                break
-            st = i.text.strip()
-            problem_all_text.append(st)
-            # 取代常用特殊字元
-            # st = HanziConv.toTraditional(replace_special_characters(st))
-            st = replace_special_characters(st)
-            lst.append(st)
-        input_output = lst[3:]
 
-        all_io = list()
-        io_dict = {"input": "", "output": "", "is_sample": True}
-        for index, io in enumerate(input_output):
-            print("io", [io])
-            io = io.replace("\r\n", "\n")
-            if index % 2 == 0:
-                io_dict["input"] = io
-            else:
-                io_dict["output"] = io
-                all_io.append(io_dict)
-                io_dict = {"input": "", "output": "", "is_sample": True}
-        # 題目來源變數
-        problem_from = (
-            f"% 題目來源:https://zerojudge.tw/ShowProblem?problemid={number} \n"
-        )
 
-        problem_dict = {
-            "title": title,
-            "timelimit": timelimit,
-            "statement": problem_from + lst[0],
-            "input_format": lst[1],
-            "output_format": lst[2],
-            "hint": "",
-        }
-    except RequestException as err:
-        print(err)
-        print("網路連接失敗")
-        return HttpResponse("網路連接失敗", status=503)  # 503 Service Unavailable
-    except Exception as err:
-        print(err)
-        print(number, "無此題目")
-        return HttpResponse("無此題目", status=404)
+    problem_dict = {
+        "title": zerojudge_data['title'],
+        "timelimit": timelimit,
+        "statement": zerojudge_data['statement'],
+        "input_format": zerojudge_data['input_format'],
+        "output_format": zerojudge_data['output_format'],
+        "hint": '',
+    }
+    
     problem_form = ProblemForm(initial=problem_dict)
-    io_form = InputOutputFormSet(initial=all_io)
-    io_form.extra = len(all_io)
-    print(all_io)
+    io_form = InputOutputFormSet(initial=zerojudge_data['input_output'])
+    io_form.extra = len(zerojudge_data['input_output'])
+    print(zerojudge_data['input_output'])
 
     content = {
         "cid": cid,
