@@ -97,7 +97,10 @@
                 $(this).attr('for', newFor);
             }
         });
-
+        //取消打勾checkbox
+        newForm.find(':checkbox').each(function () {
+                $(this).prop('checked', false);
+        });
         // 將新表單添加到容器中
         $('#formset-container').append(newForm);
 
@@ -189,7 +192,7 @@
             type: "POST",
             data: formData,
             contentType: false,  // 設置為 false，因為 FormData 已經處理了數據的編碼和類型
-            processData: false,  // 設置為 false，因為我們不想將數據轉換為字符串
+            processData: false,  // 設置為 false，取消數據轉換為字符串
             url:'/create/{{cid}}', //'/previewPDF/{{cid}}
             success: function (data) {
                 const PDFdiv = $("#PDFdiv");
