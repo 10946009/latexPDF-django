@@ -23,6 +23,11 @@ FILE_NAME = ["title", "statement", "input_format", "output_format", "hint"]
 def output_file(path, name, string):
     os.makedirs(path, exist_ok=True)
     with open(f"{path}/{name}", "w", encoding="UTF-8") as f:
+        f.write(string)
+
+def output_file_tex(path, name, string):
+    os.makedirs(path, exist_ok=True)
+    with open(f"{path}/{name}", "w", encoding="UTF-8") as f:
         string = string.replace("\r\n", "\\\\\n")
         f.write(string)
 
@@ -81,14 +86,14 @@ def create_tex(form_data, problem_data):
 
     # 寫入檔案 stament,input_format,output_format,hint
     for name in FILE_NAME:
-        output_file(path_manager.DOM, f"{name}.tex", getattr(problem_data, name))
-    output_file(
+        output_file_tex(path_manager.DOM, f"{name}.tex", getattr(problem_data, name))
+    output_file_tex(
         path_manager.DOM,
         "problem.tex",
         "\problem{./}{" + problem_data.title + "}{1}{100}",
     )
-    output_file(path_manager.DOM, "problem.yaml", f"name: {problem_data.title}")
-    output_file(
+    output_file_tex(path_manager.DOM, "problem.yaml", f"name: {problem_data.title}")
+    output_file_tex(
         path_manager.DOM,
         "domjudge-problem.ini",
         f"timelimit='{problem_data.timelimit}'",
@@ -158,12 +163,16 @@ def create(request, cid):
                 if os.path.isfile(f"{path_manager.DOM}problem.pdf"):
                     os.remove(dom_problem)
                 os.rename(dom_main_pdf, dom_problem)
+                
             if save_value == "1":
                 # 如果要存檔，就執行 save() 方法
                 process_formset_data(
                     request.POST, problem_data
                 )  # 資料庫create new data
                 problem_form.save()
+                output_file(path_manager.DOM, "ans.py", problem_data.ans_program)
+                # 生成ans.py
+                
 
             return render(
                 request, "create_form_PDF.html", {"cid": cid, "show_pdf": show_pdf}

@@ -50,7 +50,7 @@ def get_hackmd_ans(number):
         print(err)
         return None
 
-def output_file(path, name, string):
+def output_file_tex(path, name, string):
     os.makedirs(path, exist_ok=True)
     print([string])
     with open(f"{path}/{name}", "w", encoding="UTF-8") as f:
