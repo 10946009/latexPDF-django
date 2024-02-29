@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from outfile.views import create, get_zerojudge, PathManager, index,problem_crud,pdf
+from outfile.views import create, get_zerojudge, PathManager, index,problem_crud,pdf,generator
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -28,5 +28,6 @@ urlpatterns = [
     path("getZerojudge/<int:cid>", get_zerojudge.get_zerojudge),
 
     path("pdf/get/<int:cid>", pdf.get, name="get_pdf"),
+    path('get/generator/', generator.generator, name='generator'),
 
 ]
