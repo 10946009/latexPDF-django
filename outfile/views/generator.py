@@ -12,7 +12,8 @@ def generate_in_ans_file(input,code):
     
     if error:
         return error
-    
+    # 處理最後多出來的\n
+    output = output.rstrip('\n')
     return output
 
 def generator(request):
@@ -23,7 +24,9 @@ def generator(request):
     data_list = request.POST.getlist('data[]')
     output_list = []
     for data in data_list:
+        print(data)
         output = generate_in_ans_file(data,ans)
         output_list.append(output)
+    print(output_list)
 
     return JsonResponse({"output_list":output_list})
