@@ -73,7 +73,7 @@
     }
     
     const newFormCopy = $('#formset-container .formset-form:first').clone(); 
-    function addFormset() {
+    function addFormset(inputData='',outputData='') {
         event.preventDefault();
         const newForm = newFormCopy.clone();
         // 找到表單集的總表單數量
@@ -89,6 +89,13 @@
                 const name = $(this).attr('name').replace('-0-', '-' + totalForms.value + '-');
                 $(this).attr('name', name).attr('id', name);
                 $(this).val('');  // 清空表單的值
+                // 如果有傳值input就放入資料
+                if(inputData && $(this).attr('name').includes('-input')){
+                    $(this).val(inputData);
+                }
+                if(outputData && $(this).attr('name').includes('-output')){
+                    $(this).val(outputData);
+                }
             }
         });
         newForm.find('label').each(function () {
@@ -101,12 +108,13 @@
         newForm.find(':checkbox').each(function () {
                 $(this).prop('checked', false);
         });
+
+        
         // 將新表單添加到容器中
         $('#formset-container').append(newForm);
 
         // 更新表單集的總表單數量
         totalForms.value = parseInt(totalForms.value) + 1;
-        console.log(totalForms.value);
         ResetOrder();
     }
 

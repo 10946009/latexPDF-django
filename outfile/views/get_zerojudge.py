@@ -42,8 +42,9 @@ def get_hackmd_ans(number):
     ans_from = f'#from:https://hackmd.io/@10946009/zj-{number} \n'
     try:
         htmltext = get_crowd(f"https://hackmd.io/@10946009/zj-{number}")
-        title = htmltext.find("div", class_='container-fluid markdown-body').text
-        ans = env_python + ans_from + list(title.split("```"))[1].replace("python=","")
+        code = htmltext.find("div", class_='container-fluid markdown-body').text
+        code = '# ' + list(code.split("```"))[1] #使開頭不需要的內容(python!= python=)註解
+        ans = env_python + ans_from +  code
         return ans
     except Exception as err:
         print(err)

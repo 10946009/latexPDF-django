@@ -51,9 +51,10 @@
                 
                 <div class="form-group">
                         <button type="button" class="btn btn-outline-primary col-md-4" data-bs-toggle="modal" data-bs-target="#editorModal">編輯答案程式碼</button>
-                        <button type="button" class="btn btn-outline-success col-md-4" onclick="generatorAnswer()" >套用</button>
+                        <button type="button" class="btn btn-success col-md-2" onclick="generatorAnswer()" >套用</button>
+                            {% comment %} 用來上傳答案到資料庫 {% endcomment %}
                             {{problem_form.ans_program}}
-                            <input type="file" class="custom-file-input" id="pythonFile" name="pythonFile" accept=".py" hidden>
+                            
                     <div id="formset-container" style="padding:10px;">
                         {% for form in formset %}
                             <div class="formset-form" data-set="{{forloop.counter0}}">
@@ -78,7 +79,14 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <button class="btn btn-primary col-md-12" onclick="addFormset()">+</button>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="InputOutputfile" accept=".in,.ans" multiple>
+                                <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onclick="InputOutputUpload()">新增</button>
+                            </div>
+                            
+                            
+                        <button class="btn btn-primary col-md-2" onclick="addFormset()">+</button>
+                    
                     <input type="text" id="saveValue" name="saveValue" hidden></input>
                 </div>
             </div>
@@ -92,7 +100,7 @@
   
 
 <!-- Modal -->
-<div class="modal fade modal-xl " id="editorModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade modal-xl " id="editorModal"  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -103,7 +111,9 @@
             <div class="edit-div"><div id="editor" ></div></div>
         </div>
         <div class="modal-footer">
-          <div class="btn btn-outline-success col-md-2 " id="fileUploadButton">上傳答案</div>
+            <div class="input-group mb-3">
+                <input type="file" class="form-control" id="pythonFile" name="pythonFile" accept=".py" ></input>
+            </div>
         </div>
       </div>
     </div>
@@ -112,6 +122,21 @@
 {% comment %} <script src="{% static 'js/tabs.js' %}"></script> {% endcomment %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
+    async function readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+    
+            reader.onload = function(e) {
+                resolve(e.target.result);
+            };
+    
+            reader.onerror = function(e) {
+                reject(new Error("Failed to read file"));
+            };
+    
+            reader.readAsText(file);
+        });
+    }
     // ace editor
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
@@ -119,43 +144,29 @@
     editor.setFontSize(18); // replace 18 with the desired font size
     editor.setValue(document.getElementById('id_ans_program').value);
 
+    //上傳檔案後，使ace&表單傳入檔案內容
+    function inputAnswer(data){
+    document.getElementById('id_ans_program').value = data;
+    editor.setValue(data);
+    }
 
     //調整textarea的高度
     var textarea = document.querySelectorAll('textarea')
     for(let i = 0; i < textarea.length; i++){
     textarea[i].rows = 5;
     }
+    
 
-    //上傳答案按鈕互動
-    $(document).ready(function() {
-    $("#fileUploadButton").click(function(e) {
-        e.stopPropagation();
-        $("#pythonFile").click();
-    });
 
-    $("#pythonFile").click(function(e) {
-        e.stopPropagation();
-    });
-    });
-
-    //上傳檔案後，使ace&表單傳入檔案內容
-    function inputAnswer(data){
-    document.getElementById('id_ans_program').value = data;
-    editor.setValue(data);
-    }
     //偵測到有上傳檔案
     document.getElementById('pythonFile').addEventListener('change', function(e) {
     var file = e.target.files[0];
-    const reader = new FileReader();
-    
-    reader.onload = function(e) {
-        var contents = e.target.result;
-        inputAnswer(contents);
-    };
-    
-    reader.readAsText(file);
+    readFileAsText(file).then((data) => {
+        inputAnswer(data);
+    });
     });
 
+    // 使input套入answer並生成output
     function generatorAnswer(){
     let ans = editor.getValue();
     let data = document.querySelectorAll('.inputoutput-input');
@@ -184,4 +195,34 @@
         });
     }
 
+    // 本機端上傳檔案
+    function InputOutputUpload(){
+        // 取得上傳檔案
+        let file = document.getElementById('InputOutputfile').files;
+        // 根據相同的name分類成dict
+        let fileDict = {};
+        for(let i = 0; i < file.length; i++){
+            let name = file[i].name.split('.')[0];
+            let type = file[i].name.split('.')[1];
+            if (type == 'in' || type == 'ans'){
+                if (fileDict[name] == undefined){
+                    fileDict[name] = {};
+                }
+                fileDict[name][type] = file[i];
+            }
+        }
+        // 抓取filedict資料
+        for(let key in fileDict){
+            let input = fileDict[key]['in'];
+            let output = fileDict[key]['ans'];
+            let inputPromise = input != undefined ? readFileAsText(input) : "" ;
+            let outputPromise = output != undefined ? readFileAsText(output) : "";
+            Promise.all([inputPromise, outputPromise]).then(([inputdata, outputdata]) => {
+                addFormset(inputdata, outputdata);
+            });
+        }
+        
+        console.log(fileDict);
+
+    }
 </script>

@@ -35,12 +35,6 @@ textarea {
     display: none;
 }
 
-
-.btn {
-    margin-top: 10px !important;
-    margin-bottom: 10px !important;
-}
-
 .not-found-PDF {
     display: grid;
     place-items: center;  /* 居中 */
