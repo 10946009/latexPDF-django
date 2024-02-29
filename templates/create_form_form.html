@@ -9,12 +9,13 @@
     <form method="post" class="card crate-form col-md-12" style="padding:10px;" id="PDF-Data">
         <div class="tab-content " id="v-pills-tabContent">
             <div class="tab-pane fade show active" id="v-pills-problem" role="tabpanel" aria-labelledby="v-pills-problem-tab" tabindex="0">
-                <label>
-                    Zerojudge抓取：
-                    <input id="ZeroJudgeNumber" value="{{number}}" placeholder="輸入ZeruJudge題號"></input>
-                    <button class="btn-dark btn" onclick="GetZeroJudge({{cid}})">GET</button>
+                <div class="input-group">
+                    <div class="col-md-4">
+                    <input id ="ZeroJudgeNumber" type="text" value="{{number}}" class="form-control" placeholder="輸入ZeruJudge題號進行爬蟲" aria-describedby="button-addon2" >
+                </div>
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick=" GetZeroJudge({{cid}})" >GET</button>
                     <span id="errorZjMessage" style="color:red;"></span>
-                </label> 
+                  </div>
                 {% csrf_token %}
                 <div class="row">
                     <div class="form-group col-md-8">
