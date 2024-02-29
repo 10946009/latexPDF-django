@@ -107,12 +107,14 @@ def get_zerojudge_problem(number):
         print(err)
         print("網路連接失敗")
         return {"error": "網路連接失敗", "status": 503}  # 503 Service Unavailable
-    except Exception as err:
-        print(err)
-        print(number, "無此題目")
-        return {"error": "無此題目", "status": 404}
 
-    title = htmltext.find("span", id="problem_title").text
+    try:
+        title = htmltext.find("span", id="problem_title").text
+    except AttributeError as err:
+        print(err)
+        print("找不到題目")
+        return {"error": "找不到題目", "status": 404}
+    
     problem = htmltext.find_all("div", class_="panel-body")
     lst = []
     for i in problem:
