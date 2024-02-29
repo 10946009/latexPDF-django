@@ -216,8 +216,7 @@
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 loading.hide();
-                alert(xhr.status);
-                alert(thrownError);
+                CallMessage(xhr.status + thrownError);
             },
             beforeSend: function () {
                 loading.show();
@@ -236,7 +235,7 @@
                 responseType: 'blob' // 设置响应类型为二进制流
             },
             success: function (data) {
-            alert(data);
+            CallMessage("下載成功!","success");
             var blob = new Blob([data], { type: 'application/zip' });
 
             // 创建 Blob 对象的 URL
@@ -255,7 +254,7 @@
             window.URL.revokeObjectURL(blobUrl);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.status,thrownError);
+                CallMessage(xhr.status + thrownError);
             }
         });
     }
@@ -274,8 +273,7 @@
                 PDFdiv.html(data);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.status);
-                alert(thrownError);
+                CallMessage(xhr.status + thrownError);
             }
         });
     }

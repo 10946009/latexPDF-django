@@ -75,7 +75,7 @@
                     location.reload();
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert(xhr.status,thrownError);
+                    CallMessage(xhr.status,thrownError);
                 }
                 
             });
@@ -94,8 +94,7 @@
                 PDFdiv.html(data);
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                alert(xhr.status);
-                alert(thrownError);
+                CallMessage(xhr.status,thrownError);
             }
         });
             $('#sidebar').addClass('active');
