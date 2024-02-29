@@ -1,4 +1,4 @@
-const triggerTabList = document.querySelectorAll('#myTab button')
+let triggerTabList = document.querySelectorAll('#myTab button')
 
 triggerTabList.forEach(triggerEl => {
   const tabTrigger = new bootstrap.Tab(triggerEl)

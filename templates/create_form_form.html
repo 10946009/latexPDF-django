@@ -50,7 +50,8 @@
                 </div>
                 
                 <div class="form-group">
-                        <button type="button" class="btn btn-outline-primary col-md-4" data-bs-toggle="modal" data-bs-target="#editorModal">編輯答案程式碼</div>
+                        <button type="button" class="btn btn-outline-primary col-md-4" data-bs-toggle="modal" data-bs-target="#editorModal">編輯答案程式碼</button>
+                        <button type="button" class="btn btn-outline-success col-md-4" onclick="generatorAnswer()" >套用</button>
                             {{problem_form.ans_program}}
                             <input type="file" class="custom-file-input" id="pythonFile" name="pythonFile" accept=".py" hidden>
                     <div id="formset-container" style="padding:10px;">
@@ -108,49 +109,79 @@
     </div>
   </div>
   
-<script src="{% static 'js/tabs.js' %}"></script>
+{% comment %} <script src="{% static 'js/tabs.js' %}"></script> {% endcomment %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
-    // ace
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/monokai");
-        editor.session.setMode("ace/mode/python");
-        editor.setFontSize(18); // replace 18 with the desired font size
-        editor.setValue(document.getElementById('id_ans_program').value);
+    // ace editor
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/python");
+    editor.setFontSize(18); // replace 18 with the desired font size
+    editor.setValue(document.getElementById('id_ans_program').value);
+
+
     //調整textarea的高度
     var textarea = document.querySelectorAll('textarea')
     for(let i = 0; i < textarea.length; i++){
-        textarea[i].rows = 5;
+    textarea[i].rows = 5;
     }
-    //上傳答案
+
+    //上傳答案按鈕互動
     $(document).ready(function() {
-        $("#fileUploadButton").click(function(e) {
-            e.stopPropagation();
-            $("#pythonFile").click();
-        });
-    
-        $("#pythonFile").click(function(e) {
-            e.stopPropagation();
-        });
+    $("#fileUploadButton").click(function(e) {
+        e.stopPropagation();
+        $("#pythonFile").click();
     });
 
-    //ace傳入答案+表單存入答案
+    $("#pythonFile").click(function(e) {
+        e.stopPropagation();
+    });
+    });
+
+    //上傳檔案後，使ace&表單傳入檔案內容
     function inputAnswer(data){
-        document.getElementById('id_ans_program').value = data;
-        editor.setValue(data);
+    document.getElementById('id_ans_program').value = data;
+    editor.setValue(data);
     }
-    //偵測到有測資
+    //偵測到有上傳檔案
     document.getElementById('pythonFile').addEventListener('change', function(e) {
-        var file = e.target.files[0];
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            var contents = e.target.result;
-            inputAnswer(contents);
-        };
-        
-        reader.readAsText(file);
+    var file = e.target.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+        var contents = e.target.result;
+        inputAnswer(contents);
+    };
+    
+    reader.readAsText(file);
     });
 
+    function generatorAnswer(){
+    let ans = editor.getValue();
+    let data = document.querySelectorAll('.inputoutput-input');
+    let dataValue = [];
+    for(let i = 0; i < data.length; i++){
+        dataValue.push(data[i].value);
+    }
+    console.log(data);
+    $.ajax({
+        type: "POST",
+        url: "{% url 'generator' %}",
+        data: {
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+            'ans': ans,
+            'data': dataValue,
+            },
+        success: function(data){
+            let outputElement = document.querySelectorAll('.inputoutput-output');
+            for(let i = 0; i < outputElement.length; i++){
+                outputElement[i].value = data['output_list'][i];
+            }
+        },
+        error: function(data){
+            console.log(data);
+        }
+        });
+    }
 
 </script>
