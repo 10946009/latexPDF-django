@@ -31,9 +31,26 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
+    // 表單是否被修改
+    let formIsDirty = false;
+    // 監聽表單change 事件
+    document.querySelector('form').addEventListener('change', () => {
+        formIsDirty = true;
+    });
+
+    // 监听 window 的 beforeunload 事件
+    window.onbeforeunload = (event) => {
+        if (formIsDirty) {
+            // 显示警告
+            event.preventDefault();
+            event.returnValue = '';
+        }
+    };
+
+    
+    // 這裡是為了讓表單集的總表單數量與表單集的表單數量一致
     document.getElementById("id_inputoutput_set-INITIAL_FORMS").value = 0;
     function CallMessage(message,color="danger"){
-        // change color
         // style dict
         const style = {
             'danger': 'bg-danger text-white',
@@ -121,21 +138,6 @@
         ResetOrder();
     }
 
-    {% comment %} function InputOutputRemove() {
-        event.preventDefault();
-        // hidden formset-formset
-        const formsetForm = $(event.currentTarget).parents('.formset-form');
-        const formid = formsetForm.find('#id_inputoutput_set-' + formsetForm.data('set') + '-id').val();
-        if (formid) {
-            formsetForm.find('#id_inputoutput_set-' + formsetForm.data('set') + '-DELETE').prop('checked', true);
-            formsetForm.hide();
-        } else {
-            formsetForm.remove();
-        }
-        totalForms.value = parseInt(totalForms.value) -1;
-        ResetOrder();
-    } {% endcomment %}
-
     //重新排序數字編號
     function ResetOrder(){
         // input-output-number class=io-number
@@ -151,6 +153,8 @@
             count++;
         }
     }
+
+    // 刪除測資表單
     function InputOutputRemove() {
         event.preventDefault();
         // 表單集的總表單數量
@@ -189,7 +193,9 @@
         
         formset_form = formset.getElementsByClassName("formset-form");
         }
-    function PreviewPDF(saveValue){
+
+    // 預覽&儲存PDF
+    function PreviewPDF(saveValue=0){
         event.preventDefault();
         return new Promise((resolve, reject) => {
             const saveValueInput = document.getElementById("saveValue");
@@ -212,11 +218,13 @@
                     PDFdiv.html(data);
                     if(saveValue == 1){
                         //location.reload();
-                        CallMessage("儲存成功","success")
+                        CallMessage("儲存成功","success");
+                        formIsDirty = false;
                     }
-                    else if(saveValue == 0){
-                        CallMessage("預覽成功","success")
+                    else{
+                        CallMessage("預覽成功","success");    
                     }
+                    RefreshPDF();
                     loading.hide();
                     resolve();  // 在 AJAX 请求成功时解析 Promise
                 },
@@ -227,15 +235,16 @@
                 },
                 beforeSend: function () {
                     loading.show();
-
                 }
             });
         });
     };
-
+    // 下載題目ZIP
     async function DownloadZIP(){
         event.preventDefault();
-        await PreviewPDF(1);
+        if (formIsDirty) {
+            await PreviewPDF(1);
+        }
         $.ajax({
             type: "GET",
             url:'/create/{{cid}}/downloadZIP',
@@ -270,6 +279,7 @@
         document.getElementById('errorMessage').textContent = '';
     });
 
+    //重新整理PDF
     function RefreshPDF(){
         event.preventDefault();
         const formData = new FormData(document.getElementById("PDF-Data"));
@@ -286,6 +296,7 @@
         });
     }
 
+    
 
 
 </script>

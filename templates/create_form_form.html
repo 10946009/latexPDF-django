@@ -92,6 +92,25 @@
                 </div>
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade modal-xl " id="editorModal"  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="staticBackdropLabel">編輯答案程式碼</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="edit-div"><div id="editor" ></div></div>
+                </div>
+                <div class="modal-footer">
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" id="pythonFile" name="pythonFile" accept=".py" ></input>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
     </form>
 </div>
 
@@ -100,25 +119,6 @@
 
   
 
-<!-- Modal -->
-<div class="modal fade modal-xl " id="editorModal"  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">編輯答案程式碼</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="edit-div"><div id="editor" ></div></div>
-        </div>
-        <div class="modal-footer">
-            <div class="input-group mb-3">
-                <input type="file" class="form-control" id="pythonFile" name="pythonFile" accept=".py" ></input>
-            </div>
-        </div>
-      </div>
-    </div>
-  </div>
   
 {% comment %} <script src="{% static 'js/tabs.js' %}"></script> {% endcomment %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" type="text/javascript" charset="utf-8"></script>
