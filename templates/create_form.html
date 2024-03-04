@@ -87,8 +87,11 @@
         newForm.find(':input').each(function () {
             if ($(this).attr('name')) {
                 const name = $(this).attr('name').replace('-0-', '-' + totalForms.value + '-');
-                $(this).attr('name', name).attr('id', name);
-                $(this).val('');  // 清空表單的值
+                $(this).attr('name', name).attr('id', 'id-'+name);
+                // 清空textarea的值
+                if($(this).is('textarea')){
+                    $(this).val('');
+                }
                 // 如果有傳值input就放入資料
                 if(inputData && $(this).attr('name').includes('-input')){
                     $(this).val(inputData);
