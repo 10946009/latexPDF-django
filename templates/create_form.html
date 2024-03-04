@@ -34,15 +34,17 @@
     document.getElementById("id_inputoutput_set-INITIAL_FORMS").value = 0;
     function CallMessage(message,color="danger"){
         // change color
-            // Remove existing color classes
-        $('#errorMessage').removeClass('bg-danger text-white bg-success text-dark');
+        // style dict
+        const style = {
+            'danger': 'bg-danger text-white',
+            'success': 'bg-success text-white',
+            'waiting': 'bg-warning text-white',
+        }
+        // Remove style values
+        $('#errorMessage').removeClass( Object.values(style).join(' ') );
 
         // Change color based on the 'color' parameter
-        if (color === 'danger') {
-            $('#errorMessage').addClass('bg-danger text-white');
-        } else if (color === 'success') {
-            $('#errorMessage').addClass('bg-success text-white');
-        }
+        $('#errorMessage').addClass(style[color]);
 
         const messageDiv = document.getElementById('errorMessage');
         messageDiv.textContent = message;
@@ -111,8 +113,6 @@
         newForm.find(':checkbox').each(function () {
                 $(this).prop('checked', false);
         });
-
-        
         // 將新表單添加到容器中
         $('#formset-container').append(newForm);
 
@@ -231,6 +231,7 @@
 
     function DownloadZIP(){
         event.preventDefault();
+        PreviewPDF(1);
         $.ajax({
             type: "GET",
             url:'/create/{{cid}}/downloadZIP',
