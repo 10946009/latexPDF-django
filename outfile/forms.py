@@ -16,6 +16,9 @@ class ProblemForm(ModelForm):
             "output_format": "範例輸出",
             "hint": "hint",
             "ans_program": "答案程式碼",
+            'problem_tag': '標籤(未完成)',
+            'problem_hard': '難度(未完成)',
+
         }
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control"}),
@@ -25,6 +28,8 @@ class ProblemForm(ModelForm):
             "output_format": forms.Textarea(attrs={"class": "form-control"}),
             "hint": forms.Textarea(attrs={"class": "form-control"}),
             "ans_program": forms.Textarea(attrs={"class": "form-control",'hidden': 'true'}),
+            'problem_tag': forms.SelectMultiple(attrs={"class": "form-control"}),
+            'problem_hard': forms.Select(attrs={"class": "form-control"})
         }
 
 class InputOutputForm(ModelForm):
@@ -36,7 +41,7 @@ class InputOutputForm(ModelForm):
         labels = {
             "input": "輸入",
             "output": "輸出",
-            "is_sample": "範例",
+            "is_sample": "範例測資",
         }
         widgets = {
             "input": forms.Textarea(attrs={"class": "form-control inputoutput-input "}),

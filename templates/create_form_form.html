@@ -11,7 +11,7 @@
             <div class="tab-pane fade show active" id="v-pills-problem" role="tabpanel" aria-labelledby="v-pills-problem-tab" tabindex="0">
                 <div class="input-group">
                     <div class="col-md-4">
-                    <input id ="ZeroJudgeNumber" type="text" value="{{number}}" class="form-control" placeholder="輸入ZeruJudge題號進行爬蟲" aria-describedby="button-addon2" >
+                    <input id ="ZeroJudgeNumber" type="text" value="{{number}}" class="form-control" placeholder="輸入ZeruJudge題號爬蟲" aria-describedby="button-addon2" >
                 </div>
                     <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick=" GetZeroJudge({{cid}})" >GET</button>
                     <span id="errorZjMessage" style="color:red;"></span>
@@ -42,6 +42,14 @@
                         {{ problem_form.hint.label_tag }}
                         {{ problem_form.hint }}
                     </div>
+                    <div class="form-group col-md-6">
+                        {{ problem_form.problem_tag.label_tag }}
+                        {{ problem_form.problem_tag }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        {{ problem_form.problem_hard.label_tag }}
+                        {{ problem_form.problem_hard }}
+                    </div>
                 </div>
                 {{ formset.management_form }}
             </div>
@@ -60,9 +68,7 @@
                         {% for form in formset %}
                             <div class="formset-form" data-set="{{forloop.counter0}}">
                                 <div class="row align-items-center">
-                                    <div class="io-number col-md-1">
-                                        <label id="input-output-number">#{{ forloop.counter }}</label>
-                                    </div>
+
                                     <div class="form-group col-md-5">
                                         {{ form.input.label_tag }}
                                         {{ form.input }}
@@ -71,8 +77,10 @@
                                         {{ form.output.label_tag }}
                                         {{ form.output }}
                                     </div>
-                                    <div class="row col-md-1">
-                                        {{ form.is_sample }}
+                                    <div class="row col-md-2">
+                                        <label id="input-output-number">#{{ forloop.counter }}</label>
+                                        
+                                        <div>{{ form.is_sample }}<span style="font-size:16px">sample</span></div>
                                         <button type="button" class="btn btn-danger" onclick="InputOutputRemove.call(this);">X</button>
                                     </div>
                                     <hr>
@@ -88,7 +96,7 @@
                             
                         <button class="btn btn-primary col-md-2" onclick="addFormset()">+</button>
                     
-                    <input type="text" id="saveValue" name="saveValue" hidden></input>
+                    <input type="text" id="saveValue" name="saveValue" hidden>
                 </div>
             </div>
         </div>
@@ -105,7 +113,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="input-group mb-3">
-                        <input type="file" class="form-control" id="pythonFile" name="pythonFile" accept=".py" ></input>
+                        <input type="file" class="form-control" id="pythonFile" name="pythonFile" accept=".py" >
                     </div>
                 </div>
               </div>
@@ -219,6 +227,8 @@
             let inputPromise = input != undefined ? readFileAsText(input) : "" ;
             let outputPromise = output != undefined ? readFileAsText(output) : "";
             Promise.all([inputPromise, outputPromise]).then(([inputdata, outputdata]) => {
+                inputdata = inputdata.trim();  // 删除 inputdata 尾部的換行
+                outputdata = outputdata.trim();  // 删除 outputdata 尾部的換行
                 addFormset(inputdata, outputdata);
             });
         }

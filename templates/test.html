@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+</head>
+<body>
+    <div id="editor" style="height: 300px; width: 500px;">print('Hello, world!')</div>
+    <button onclick="runCode()">Run Code</button>
+    <pre id="output"></pre>
+
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.session.setMode("ace/mode/python");
+
+        async function runCode() {
+            await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
+            var pythonCode = editor.getValue();
+            var outputElement = document.getElementById('output');
+            try {
+                var output = pyodide.runPython(pythonCode);
+                outputElement.textContent = output;
+            } catch (e) {
+                outputElement.textContent = 'Error: ' + e;
+            }
+        }
+    </script>
+</body>
+</html>
