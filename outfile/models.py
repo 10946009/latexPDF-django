@@ -5,7 +5,7 @@ from django.db import models
 class Problem(models.Model):
     # main_tex = models.ForeignKey('MainTex', on_delete=models.SET_DEFAULT)
     title = models.TextField(blank=True, null=False, default='')
-    problem_number = models.TextField(blank=True, null=False, default='')
+    
     timelimit = models.IntegerField(blank=False, null=False, default=1)
     statement = models.TextField(blank=True, null=False, default='')
     input_format = models.TextField(blank=True, null=False, default='')
@@ -15,8 +15,9 @@ class Problem(models.Model):
     edited_time = models.DateTimeField(auto_now=True ,blank=True, null=True)
     ans_program = models.TextField(blank=True, null=False, default='')
 
-    problem_tag = models.ManyToManyField('Tag', blank=True)
-    problem_hard = models.ManyToManyField('Hard', blank=True)
+    # problem_number = models.TextField(blank=True, null=False, default='')
+    # problem_tag = models.ManyToManyField('Tag', blank=True)
+    # problem_hard = models.ManyToManyField('Hard', blank=True)
     def __str__(self):
         return self.title
 
