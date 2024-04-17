@@ -16,8 +16,8 @@ class ProblemForm(ModelForm):
             "output_format": "範例輸出",
             "hint": "hint",
             "ans_program": "答案程式碼",
-            'problem_tag': '標籤(未完成)',
-            'problem_hard': '難度(未完成)',
+            # 'problem_tag': '標籤(未完成)',
+            # 'problem_hard': '難度(未完成)',
 
         }
         widgets = {

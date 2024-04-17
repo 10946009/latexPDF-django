@@ -20,4 +20,4 @@ ENV PATH="${PATH}:/root/.local/bin"
 RUN poetry install
 
 # Set the entrypoint to run the server
-ENTRYPOINT ["poetry", "run", "python3", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["poetry", "run", "python3", "manage.py", "runserver", "0.0.0.0:8080"]

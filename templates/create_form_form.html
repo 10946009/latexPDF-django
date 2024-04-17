@@ -42,14 +42,14 @@
                         {{ problem_form.hint.label_tag }}
                         {{ problem_form.hint }}
                     </div>
-                    <div class="form-group col-md-6">
+                    {% comment %} <div class="form-group col-md-6">
                         {{ problem_form.problem_tag.label_tag }}
                         {{ problem_form.problem_tag }}
                     </div>
                     <div class="form-group col-md-6">
                         {{ problem_form.problem_hard.label_tag }}
                         {{ problem_form.problem_hard }}
-                    </div>
+                    </div> {% endcomment %}
                 </div>
                 {{ formset.management_form }}
             </div>
